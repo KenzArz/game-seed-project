@@ -1,0 +1,156 @@
+[gd_scene format=3 uid="uid://b4ocayp5xdca"]
+
+[ext_resource type="FontFile" uid="uid://b4eaqs7h2b4i6" path="res://assets/fonts/inter/Inter-Bold.otf" id="1_1ch07"]
+[ext_resource type="Script" uid="uid://q7jdap00eqjh" path="res://scenes/ui/main_menu/main_menu.gd" id="1_52x6y"]
+[ext_resource type="FontFile" uid="uid://dmq3jd6vyt6ws" path="res://assets/fonts/inter/Inter-Regular.otf" id="2_e8t4i"]
+[ext_resource type="Texture2D" uid="uid://qascw4xbtfha" path="res://assets/ui/testing_gayung.png" id="3_cmwxi"]
+[ext_resource type="Texture2D" uid="uid://43hqgow5pu06" path="res://assets/ui/testing_gayung_handle.png" id="4_r70wa"]
+[ext_resource type="PackedScene" uid="uid://c20i5on1dwv38" path="res://scenes/ui/setting/pengaturan.tscn" id="5_r70wa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e8t4i"]
+
+[sub_resource type="FontVariation" id="FontVariation_qt1dd"]
+base_font = ExtResource("1_1ch07")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cmwxi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qt1dd"]
+
+[sub_resource type="FontVariation" id="FontVariation_e8t4i"]
+base_font = ExtResource("2_e8t4i")
+
+[node name="Control" type="Control" unique_id=662802568]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_52x6y")
+
+[node name="menu" type="CanvasLayer" parent="." unique_id=1410966213]
+
+[node name="ColorRect" type="ColorRect" parent="menu" unique_id=718678177]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.17254902, 0.24313726, 0.3529412, 1)
+
+[node name="PanelContainer" type="PanelContainer" parent="menu" unique_id=2084989481]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 2.0
+offset_right = 4.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/panel = SubResource("StyleBoxEmpty_e8t4i")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="menu/PanelContainer" unique_id=31087338]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="title" type="Label" parent="menu/PanelContainer/VBoxContainer" unique_id=1551043065]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_fonts/font = SubResource("FontVariation_qt1dd")
+theme_override_font_sizes/font_size = 130
+theme_override_styles/normal = SubResource("StyleBoxEmpty_cmwxi")
+text = "BUSA
+FANTASY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="menu/PanelContainer/VBoxContainer" unique_id=652873623]
+layout_mode = 2
+theme_override_constants/separation = 200
+theme_override_styles/separator = SubResource("StyleBoxEmpty_qt1dd")
+
+[node name="mulai" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=864023897]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_pressed_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.78431374, 0.25882354, 1)
+theme_override_fonts/font = SubResource("FontVariation_e8t4i")
+theme_override_font_sizes/font_size = 32
+text = "Mulai"
+flat = true
+
+[node name="pengaturan" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=421385223]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_pressed_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.78431374, 0.25882354, 1)
+theme_override_fonts/font = SubResource("FontVariation_e8t4i")
+theme_override_font_sizes/font_size = 32
+text = "Pengaturan"
+flat = true
+
+[node name="kredit" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=1925842244]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_pressed_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.78431374, 0.25882354, 1)
+theme_override_fonts/font = SubResource("FontVariation_e8t4i")
+theme_override_font_sizes/font_size = 32
+text = "Kredit
+"
+flat = true
+
+[node name="keluar" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=1314558726]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_pressed_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.78431374, 0.25882354, 1)
+theme_override_fonts/font = SubResource("FontVariation_e8t4i")
+theme_override_font_sizes/font_size = 32
+text = "Keluar
+"
+flat = true
+
+[node name="PakGuyonGayung" type="Sprite2D" parent="menu/PanelContainer/VBoxContainer" unique_id=914083157]
+position = Vector2(296, 434)
+texture = ExtResource("3_cmwxi")
+metadata/_edit_group_ = true
+
+[node name="GayungHandle" type="Sprite2D" parent="menu/PanelContainer/VBoxContainer" unique_id=1761144697]
+position = Vector2(537, 427)
+texture = ExtResource("4_r70wa")
+metadata/_edit_group_ = true
+
+[node name="Polygon2D" type="Polygon2D" parent="menu/PanelContainer" unique_id=922751925]
+position = Vector2(1, 429)
+color = Color(0.14509805, 0.20784314, 0.3137255, 1)
+polygon = PackedVector2Array(-4, 477, 49, 519, 100, 553, 163, 582, 224, 606, 292, 626, 369, 649, -4, 649)
+uv = PackedVector2Array(-1, 479, 49, 519, 101, 555, 161, 579, 235, 593, 292, 626, 366, 646, -1, 648)
+
+[node name="Polygon2D2" type="Polygon2D" parent="menu/PanelContainer" unique_id=686843305]
+position = Vector2(1912, 429)
+rotation = -3.1415925
+scale = Vector2(1, -1)
+color = Color(0.14509805, 0.20784314, 0.3137255, 1)
+polygon = PackedVector2Array(-4, 477, 49, 519, 100, 553, 163, 582, 224, 606, 292, 626, 369, 649, -4, 649)
+uv = PackedVector2Array(-1, 479, 49, 519, 101, 555, 161, 579, 235, 593, 292, 626, 366, 646, -1, 648)
+
+[node name="pengaturan" parent="." unique_id=1784675409 instance=ExtResource("5_r70wa")]
+visible = false
+
+[connection signal="pressed" from="menu/PanelContainer/VBoxContainer/pengaturan" to="." method="_on_pengaturan_pressed"]
+[connection signal="pressed" from="menu/PanelContainer/VBoxContainer/keluar" to="." method="_on_keluar_pressed"]
