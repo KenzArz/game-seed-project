@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dw8pm6ky1ngg2"]
+
+[ext_resource type="Script" uid="uid://dxakgk5gjcksa" path="res://scripts/systems/level1.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/placeholder_box.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/panels/mixing_panel.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://c5i5gh52t1tcd" path="res://assets/backgrounds/5918707.png" id="3_nppad"]
+[ext_resource type="PackedScene" path="res://scenes/ui/panels/serve_panel.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/ui/panels/customer_portrait_panel.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/ui/panels/stir_panel.tscn" id="7"]
+
+[node name="Level1" type="Control" unique_id=331216179]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" parent="." unique_id=705608398 instance=ExtResource("2")]
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+display_name = "LATAR KAMAR MANDI"
+texture = ExtResource("3_nppad")
+
+[node name="MixingPanel" parent="." unique_id=1430830334 instance=ExtResource("3")]
+layout_mode = 1
+
+[node name="ServePanel" parent="." unique_id=699469464 instance=ExtResource("4")]
+layout_mode = 1
+
+[node name="CustomerPortraitPanel" parent="." unique_id=435884941 instance=ExtResource("5")]
+layout_mode = 1
+
+[node name="StirCanvas" type="CanvasLayer" parent="." unique_id=1995012684]
+layer = 5
+
+[node name="StirPanel" parent="StirCanvas" unique_id=547427547 instance=ExtResource("7")]
+
+[node name="DebugCanvas" type="CanvasLayer" parent="." unique_id=141749509]
+layer = 10
+
+[node name="DebugLabel" type="Label" parent="DebugCanvas" unique_id=1121698962]
+visible = false
+offset_left = 24.0
+offset_top = 870.0
+offset_right = 760.0
+offset_bottom = 1060.0
+theme_override_font_sizes/font_size = 26
+text = "PHASE:"

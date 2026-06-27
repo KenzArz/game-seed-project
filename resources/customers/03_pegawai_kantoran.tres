@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CustomerData" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pegawai_kantoran"
+display_name = "Pegawai Kantoran"
+npc_color = Color(0.4, 0.45, 0.55, 1)
+recipe = PackedStringArray("shampo", "bedak", "garam")
+result_perfect = "Comfort Bubble"
+intro_lines = PackedStringArray("Haah... lembur tiga hari berturut-turut. Badanku remuk semua.", "Tolong... buatkan busa yang lembut dan hangat, yang menenangkan.", "Aku cuma mau rileks sebentar... lupakan deadline barang semenit.")
+react_perfect = PackedStringArray("Hngg... lembut sekali... hangatnya pas di badan...", "Bahuku terasa ringan. Aku bisa bernapas lagi. Terima kasih banyak.")
+react_partial = PackedStringArray("Lumayan... tapi masih kurang menenangkan.", "Mungkin tambahkan yang lembut dan yang hangat ya... biar capeknya hilang.")
+react_wrong = PackedStringArray("Aduh... ini malah bikin badanku makin tegang.", "Aku butuh yang lembut dan hangat... bukan yang seperti ini.")
+background_color = Color(0.14, 0.15, 0.18, 1)

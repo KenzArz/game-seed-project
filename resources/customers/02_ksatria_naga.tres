@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CustomerData" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "ksatria_naga"
+display_name = "Ksatria Naga"
+npc_color = Color(0.6, 0.3, 0.3, 1)
+recipe = PackedStringArray("sabun", "pasta", "mint")
+result_perfect = "Mint Foam"
+intro_lines = PackedStringArray("Aku Ksatria Naga... tapi jujur, akhir-akhir ini nyaliku menciut.", "Aku butuh ramuan yang DINGIN menyengat, yang bikin tubuhku siaga!", "Yang tajam dan segar, biar semangatku menyala lagi seperti dulu.")
+react_perfect = PackedStringArray("Ohh! Dingin tajamnya menjalar... dadaku langsung membusung!", "Aku merasa berani lagi! Demi kehormatan, terima kasih, peracik muda!")
+react_partial = PackedStringArray("Hmm, ada rasa segarnya... tapi kurang menyengat.", "Tambahkan yang dingin tajam dan daun mint, biar nyaliku benar-benar bangkit.")
+react_wrong = PackedStringArray("Ini... sama sekali tidak membangkitkan keberanianku.", "Aku butuh yang dingin dan tajam, ksatria muda... bukan ini.")
+background_color = Color(0.16, 0.13, 0.14, 1)
