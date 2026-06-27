@@ -152,5 +152,6 @@ uv = PackedVector2Array(-1, 479, 49, 519, 101, 555, 161, 579, 235, 593, 292, 626
 [node name="pengaturan" parent="." unique_id=1784675409 instance=ExtResource("5_r70wa")]
 visible = false
 
+[connection signal="pressed" from="menu/PanelContainer/VBoxContainer/mulai" to="." method="_on_mulai_pressed"]
 [connection signal="pressed" from="menu/PanelContainer/VBoxContainer/pengaturan" to="." method="_on_pengaturan_pressed"]
 [connection signal="pressed" from="menu/PanelContainer/VBoxContainer/keluar" to="." method="_on_keluar_pressed"]

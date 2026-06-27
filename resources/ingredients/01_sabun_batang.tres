@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="IngredientDef" format=3 uid="uid://dxwgqqeap701y"]
+
+[ext_resource type="Script" uid="uid://b64ew60sfqh7t" path="res://scripts/systems/ingredient_def.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://xcujmw6xyr7x" path="res://assets/Bahan/lifebuoy.png" id="2_nejnv"]
+
+[resource]
+script = ExtResource("1")
+id = "sabun"
+display_name = "Sabun Batang"
+placeholder_color = Color(0.85, 0.85, 0.7, 1)
+texture = ExtResource("2_nejnv")

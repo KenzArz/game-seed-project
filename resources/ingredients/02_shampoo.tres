@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="IngredientDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/ingredient_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "shampo"
+display_name = "Shampoo"
+placeholder_color = Color(0.5, 0.7, 0.9, 1)

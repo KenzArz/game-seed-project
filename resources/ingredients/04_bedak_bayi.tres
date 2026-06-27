@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="IngredientDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/ingredient_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "bedak"
+display_name = "Bedak Bayi"
+placeholder_color = Color(0.95, 0.9, 0.92, 1)

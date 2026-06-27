@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://busafant_phbox01"]
+
+[ext_resource type="Script" path="res://scripts/systems/placeholder_box.gd" id="1"]
+
+[node name="PlaceholderBox" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 200.0
+offset_bottom = 200.0
+script = ExtResource("1")

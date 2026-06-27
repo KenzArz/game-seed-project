@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CustomerData" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "monster_debu"
+display_name = "Monster Debu"
+npc_color = Color(0.5, 0.5, 0.45, 1)
+recipe = PackedStringArray("sabun", "shampo", "garam")
+result_perfect = "Ocean Cloud"
+intro_lines = PackedStringArray("GRRR! Aku Monster Debu! Seluruh tubuhku penuh debu menyebalkan!", "Buatkan busa yang KUAT membersihkan! Yang tebal berbusa seperti ombak!", "Kalau debunya tidak hilang... aku akan makin marah!")
+react_perfect = PackedStringArray("Ombaknya... menyapu semua debuku!", "Hmph... aku jadi bersih. Dan... tenang. Te-terima kasih. (malu)")
+react_partial = PackedStringArray("Grr, sebagian debu masih nempel di badanku!", "Butuh yang lebih kuat membersihkan... garam mandinya jangan lupa!")
+react_wrong = PackedStringArray("GROAAR! Debuku malah nggak hilang sama sekali!", "Aku mau yang KUAT bersih-bersihnya! Busa tebal! Garam!")
+background_color = Color(0.15, 0.15, 0.14, 1)

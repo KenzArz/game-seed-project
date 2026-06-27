@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CustomerData" format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "mystery_child"
+display_name = "Mystery Child"
+npc_color = Color(0.5, 0.45, 0.6, 1)
+recipe = PackedStringArray("bedak", "mint", "garam")
+result_perfect = "Morning Breeze"
+intro_lines = PackedStringArray("...halo.", "Aku... nggak tahu aku mau apa. Aku cuma merasa kurang... cukup.", "Buatkan saja apa yang menurut kakak baik untukku ya.")
+react_perfect = PackedStringArray("...ini hangat sekali.", "Untuk pertama kalinya, aku merasa... aku cukup, apa adanya.", "Terima kasih sudah meracikku dengan sepenuh hati.")
+react_partial = PackedStringArray("...nggak sempurna ya. Tapi nggak apa-apa.", "Justru karena nggak sempurna, ini terasa jujur. Aku suka.")
+react_wrong = PackedStringArray("...ini bukan yang orang-orang bilang 'bagus'.", "Tapi kakak membuatnya untukku. Itu saja sudah lebih dari cukup. Terima kasih.")
+background_color = Color(0.15, 0.14, 0.18, 1)
