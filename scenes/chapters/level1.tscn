@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://da3dnwi5sfsic" path="res://assets/backgrounds/GAYUNG.png" id="10_7ms1v"]
 [ext_resource type="Texture2D" uid="uid://bimo24ygbq68p" path="res://assets/backgrounds/Background5_Aduk Bahan_Air Sabun.png" id="10_vq8yw"]
 [ext_resource type="PackedScene" uid="uid://v6umpais8owb" path="res://scenes/ui/gayung_station.tscn" id="11"]
+[ext_resource type="Script" path="res://scripts/ui/suhu_toggle.gd" id="12"]
+[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu default.png" id="15"]
 
 [node name="Level1" type="Control" unique_id=1649604347]
 layout_mode = 3
@@ -167,6 +169,31 @@ theme_override_colors/font_color = Color(0.96, 0.9, 0.7, 1)
 theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="SuhuToggle" type="Control" parent="." unique_id=1923456789]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 880.0
+offset_right = 480.0
+offset_bottom = 1020.0
+script = ExtResource("12")
+
+[node name="Btn" type="TextureButton" parent="SuhuToggle" unique_id=1923456790]
+layout_mode = 0
+offset_right = 110.0
+offset_bottom = 110.0
+texture_normal = ExtResource("15")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="SuhuToggle" unique_id=1923456793]
+layout_mode = 0
+offset_top = 114.0
+offset_right = 110.0
+offset_bottom = 138.0
+theme_override_font_sizes/font_size = 16
+text = "Netral"
+horizontal_alignment = 1
 
 [node name="StirCanvas" type="CanvasLayer" parent="." unique_id=103183012]
 layer = 5

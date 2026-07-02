@@ -23,6 +23,7 @@ GameState="*res://scripts/systems/game_state.gd"
 SaveManager="*res://scripts/systems/save_manager.gd"
 SettingsManager="*res://scripts/systems/settings_manager.gd"
 AudioManager="*res://scenes/systems/audio_manager.tscn"
+CursorManager="*res://scripts/systems/cursor_manager.gd"
 
 [dialogic]
 

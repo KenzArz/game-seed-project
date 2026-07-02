@@ -49,6 +49,7 @@ var _bahan_items: Array = []            # semua DraggableItem bahan (grup "bahan
 var _tex_bahan := {}                    # id -> texture bahan (buat visual isi)
 var _bubuk_ids: Array = []              # id bahan yang terkandung di bubuk hasil ulek
 var _tutorial := false                  # true = playthrough pertama, tampilkan hint
+var _gayung_hoverable := false          # hover gayung baru aktif setelah serbuk masuk
 
 
 func _ready() -> void:
@@ -85,6 +86,9 @@ func _ready() -> void:
 		_default_bg_color = background.box_color
 
 	_build_end_label()
+
+	# Wire cursor hover for all interactive elements.
+	_wire_cursor_hover()
 
 	# Mulai dari pelanggan tersimpan (fitur Lanjutkan).
 	var data := SaveManager.load_data()
@@ -133,6 +137,7 @@ func _reset_station() -> void:
 	gayung.kosong()
 	bubuk.visible = false
 	_bubuk_ids.clear()
+	_gayung_hoverable = false  # reset: gayung belum berisi serbuk
 	for item: DraggableItem in _bahan_items:
 		item.return_home()
 
@@ -181,6 +186,7 @@ func _advance_customer() -> void:
 # Bahan dilepas: kalau pas di atas ulekan & ulekan kosong -> isi. Bahan = sumber
 # tak habis, jadi selalu balik ke rak.
 func _on_bahan_dropped(item: DraggableItem) -> void:
+	CursorManager.end_drag()
 	if phase == Phase.CRAFTING:
 		var titik := item.get_global_rect().get_center()
 		if ulekan.atas_mangkuk(titik):
@@ -192,9 +198,10 @@ func _on_bahan_dropped(item: DraggableItem) -> void:
 	item.return_home()  # bahan = sumber tak habis, selalu balik ke rak
 
 
-# Ulekan selesai ditumbuk -> munculkan bubuk hasil (membawa SEMUA id bahannya).
+# Item (bahan/bubuk) diangkat -> kunci cursor ke mode grab bahan.
 func _on_item_diangkat(_item: DraggableItem) -> void:
 	AudioManager.play_sfx("drag")
+	CursorManager.begin_drag(CursorManager.Cursor.DRAG_BAHAN)
 
 
 func _on_selesai_menumbuk(ids: Array) -> void:
@@ -209,11 +216,13 @@ func _on_selesai_menumbuk(ids: Array) -> void:
 # Bubuk dilepas: kalau pas di atas gayung -> semua bahannya masuk gayung. Kalau
 # tidak, balik ke tempatnya.
 func _on_bubuk_dropped(item: DraggableItem) -> void:
+	CursorManager.end_drag()
 	if phase == Phase.CRAFTING and _di_atas(item, gayung):
 		for id: String in _bubuk_ids:
 			gayung.tambah_bubuk(id, item.texture)
 		_bubuk_ids.clear()
 		item.visible = false  # bubuk habis dipakai
+		_gayung_hoverable = true  # serbuk masuk -> gayung sekarang bisa di-hover/klik
 		_show_hint(HINT_KLIK)  # bubuk masuk gayung -> ajari klik untuk mengaduk
 	else:
 		item.return_home()
@@ -224,6 +233,8 @@ func _on_minta_stir() -> void:
 	if phase != Phase.CRAFTING or sedang_transisi:
 		return
 	AudioManager.play_sfx("gayung")
+	_gayung_hoverable = false  # sudah masuk stir; matikan hover gayung
+	CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)
 	_selesai_tutorial()  # sampai sini = pemain sudah paham; matikan hint selamanya
 	sedang_transisi = true
 	phase = Phase.STIR
@@ -407,3 +418,51 @@ func _fallback_customer() -> CustomerData:
 	pelanggan.react_partial = PackedStringArray(["Terima kasih!"])
 	pelanggan.react_wrong = PackedStringArray(["Terima kasih!"])
 	return pelanggan
+
+
+# --- Cursor wiring -----------------------------------------------------------
+
+func _wire_cursor_hover() -> void:
+	# Wire bahan items (draggable).
+	for node in get_tree().get_nodes_in_group("bahan"):
+		if node is Control:
+			CursorManager.connect_hover(node)
+
+	# Wire ulekan.
+	if ulekan and ulekan is Control:
+		CursorManager.connect_hover(ulekan)
+
+	# Wire alat ulek (pestle) — biar hover ketauan alatnya bisa di-drag.
+	var alat := ulekan.get_node_or_null("Alat")
+	if alat and alat is Control:
+		CursorManager.connect_hover(alat)
+
+	# Wire bubuk/serbuk hasil tumbuk — biar ada hover juga (nandain bisa di-drag).
+	if bubuk and bubuk is Control:
+		CursorManager.connect_hover(bubuk)
+
+	# Gayung: hover DI-GATE lewat _gayung_hoverable — baru aktif setelah serbuk
+	# masuk gayung (hint bahwa gayung bisa diklik untuk mengaduk).
+	if gayung and gayung is Control:
+		gayung.mouse_entered.connect(_on_gayung_hover_enter)
+		gayung.mouse_exited.connect(_on_gayung_hover_exit)
+
+	# Wire suhu toggle: pasang di tombolnya (Btn), bukan container, biar hover kena.
+	var suhu_btn := $SuhuToggle.get_node_or_null("Btn")
+	if suhu_btn and suhu_btn is Control:
+		CursorManager.connect_hover(suhu_btn)
+
+	# Wire customer window (if clickable).
+	if customer_window and customer_window is Control:
+		CursorManager.connect_hover(customer_window)
+
+
+# Gayung hover hanya berlaku saat serbuk sudah ada di gayung (siap diaduk).
+func _on_gayung_hover_enter() -> void:
+	if _gayung_hoverable:
+		CursorManager.set_cursor(CursorManager.Cursor.HOVER)
+
+
+func _on_gayung_hover_exit() -> void:
+	if _gayung_hoverable:
+		CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)

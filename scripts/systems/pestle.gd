@@ -23,6 +23,10 @@ func _ready() -> void:
 
 
 func return_home() -> void:
+	# Kalau dipanggil selagi masih di-drag (mis. selesai menumbuk otomatis saat
+	# tombol mouse masih ditekan), lepaskan kunci cursor supaya tidak nyangkut grab.
+	if _drag and not Engine.is_editor_hint():
+		CursorManager.end_drag()
 	_drag = false
 	z_index = 0
 	var t := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -39,8 +43,10 @@ func _gui_input(event: InputEvent) -> void:
 			_offset = get_global_mouse_position() - global_position
 			z_index = 60
 			move_to_front()
+			CursorManager.begin_drag(CursorManager.Cursor.DRAG_BAHAN)  # kunci grab selama menumbuk
 		elif _drag:
 			_drag = false
+			CursorManager.end_drag()
 			dilepas.emit()
 		accept_event()
 	elif event is InputEventMouseMotion and _drag:
