@@ -27,7 +27,7 @@ func _ready() -> void:
 
 	# Visibility follows CRAFTING phase.
 	GameState.state_changed.connect(_on_game_state_changed)
-	_on_game_state_changed(GameState.current_state)
+	_on_game_state_changed(GameState.current)
 
 
 func cycle_state() -> void:
@@ -60,6 +60,6 @@ func _update_visual() -> void:
 		label.text = STATE_NAMES[current_state]
 
 
-func _on_game_state_changed(new_state: GameState.State) -> void:
+func _on_game_state_changed(new_state: int) -> void:
 	# Show toggle only during CRAFTING phase.
 	visible = (new_state == GameState.State.CRAFTING)

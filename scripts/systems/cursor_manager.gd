@@ -1,7 +1,8 @@
 ## CURSOR MANAGER — singleton autoload managing 4 cursor states.
-## Wiring: interactive elements call cursor_manager.connect_hover(node) at startup,
+## Wiring: interactive elements call CursorManager.connect_hover(node) at startup,
 ## or manually connect mouse_entered -> set_cursor(HOVER) & mouse_exited -> set_cursor(DEFAULT).
-class_name CursorManager
+## NOTE: no `class_name` — autoload name already exposes this globally (class_name would
+## clash with the autoload singleton).
 extends Node
 
 enum Cursor { DEFAULT, HOVER, DRAG_BAHAN, DRAG_GUYON }
