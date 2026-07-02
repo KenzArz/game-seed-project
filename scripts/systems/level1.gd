@@ -86,6 +86,9 @@ func _ready() -> void:
 
 	_build_end_label()
 
+	# Wire cursor hover for all interactive elements.
+	_wire_cursor_hover()
+
 	# Mulai dari pelanggan tersimpan (fitur Lanjutkan).
 	var data := SaveManager.load_data()
 	_customer_index = int(data.get("customer_index", 0))
@@ -407,3 +410,29 @@ func _fallback_customer() -> CustomerData:
 	pelanggan.react_partial = PackedStringArray(["Terima kasih!"])
 	pelanggan.react_wrong = PackedStringArray(["Terima kasih!"])
 	return pelanggan
+
+
+# --- Cursor wiring -----------------------------------------------------------
+
+func _wire_cursor_hover() -> void:
+	# Wire bahan items (draggable).
+	for node in get_tree().get_nodes_in_group("bahan"):
+		if node is Control:
+			CursorManager.connect_hover(node)
+
+	# Wire ulekan.
+	if ulekan and ulekan is Control:
+		CursorManager.connect_hover(ulekan)
+
+	# Wire gayung.
+	if gayung and gayung is Control:
+		CursorManager.connect_hover(gayung)
+
+	# Wire suhu toggle.
+	var suhu_toggle = $SuhuToggle
+	if suhu_toggle and suhu_toggle is Control:
+		CursorManager.connect_hover(suhu_toggle)
+
+	# Wire customer window (if clickable).
+	if customer_window and customer_window is Control:
+		CursorManager.connect_hover(customer_window)
