@@ -13,12 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://bimo24ygbq68p" path="res://assets/backgrounds/Background5_Aduk Bahan_Air Sabun.png" id="10_vq8yw"]
 [ext_resource type="PackedScene" uid="uid://v6umpais8owb" path="res://scenes/ui/gayung_station.tscn" id="11"]
 [ext_resource type="Script" path="res://scripts/ui/suhu_toggle.gd" id="12"]
-[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu cold.png" id="13"]
-[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu cold pressed.png" id="14"]
 [ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu default.png" id="15"]
-[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu default pressed.png" id="16"]
-[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu Hot .png" id="17"]
-[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu Hot pressed.png" id="18"]
 
 [node name="Level1" type="Control" unique_id=1649604347]
 layout_mode = 3
@@ -177,49 +172,26 @@ vertical_alignment = 1
 
 [node name="SuhuToggle" type="Control" parent="." unique_id=1923456789]
 layout_mode = 0
-offset_left = 340.0
-offset_top = 900.0
-offset_right = 540.0
-offset_bottom = 960.0
+offset_left = 360.0
+offset_top = 880.0
+offset_right = 480.0
+offset_bottom = 1020.0
 script = ExtResource("12")
 
-[node name="DinginBtn" type="TextureButton" parent="SuhuToggle" unique_id=1923456790]
+[node name="Btn" type="TextureButton" parent="SuhuToggle" unique_id=1923456790]
 layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 60.0
-offset_bottom = 60.0
-texture_normal = ExtResource("13")
-texture_pressed = ExtResource("14")
-toggle_mode = true
-
-[node name="NetralBtn" type="TextureButton" parent="SuhuToggle" unique_id=1923456791]
-layout_mode = 0
-offset_left = 70.0
-offset_top = 0.0
-offset_right = 130.0
-offset_bottom = 60.0
+offset_right = 110.0
+offset_bottom = 110.0
 texture_normal = ExtResource("15")
-texture_pressed = ExtResource("16")
-toggle_mode = true
-
-[node name="PanasBtn" type="TextureButton" parent="SuhuToggle" unique_id=1923456792]
-layout_mode = 0
-offset_left = 140.0
-offset_top = 0.0
-offset_right = 200.0
-offset_bottom = 60.0
-texture_normal = ExtResource("17")
-texture_pressed = ExtResource("18")
-toggle_mode = true
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="SuhuToggle" unique_id=1923456793]
 layout_mode = 0
-offset_left = 0.0
-offset_top = 65.0
-offset_right = 200.0
-offset_bottom = 88.0
-theme_override_font_sizes/font_size = 14
+offset_top = 114.0
+offset_right = 110.0
+offset_bottom = 138.0
+theme_override_font_sizes/font_size = 16
 text = "Netral"
 horizontal_alignment = 1
 
