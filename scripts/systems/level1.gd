@@ -427,6 +427,11 @@ func _wire_cursor_hover() -> void:
 	if ulekan and ulekan is Control:
 		CursorManager.connect_hover(ulekan)
 
+	# Wire alat ulek (pestle) — biar hover ketauan alatnya bisa di-drag.
+	var alat := ulekan.get_node_or_null("Alat")
+	if alat and alat is Control:
+		CursorManager.connect_hover(alat)
+
 	# Wire gayung.
 	if gayung and gayung is Control:
 		CursorManager.connect_hover(gayung)
