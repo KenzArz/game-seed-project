@@ -34,6 +34,7 @@ var _spoon_radius := 1.0
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP  # panel menerima gerakan seret
 	_sajikan.pressed.connect(func() -> void: serve_requested.emit())
+	CursorManager.connect_hover(_sajikan)  # tombol Sajikan ikut hover
 	# Ambil geometri dari node gayung (ikut kalau digeser/diresize di editor).
 	_center = _vessel.position + _vessel.size * 0.5
 	_radius = _vessel.size.x * 0.5
@@ -59,15 +60,24 @@ func _gui_input(event: InputEvent) -> void:
 		if mb.pressed and mb.position.distance_to(_center) <= _radius * 1.4:
 			_dragging = true
 			_last_angle = (mb.position - _center).angle()
+			CursorManager.begin_drag(CursorManager.Cursor.DRAG_BAHAN)  # kunci grab saat mengaduk
 		else:
+			if _dragging:
+				CursorManager.end_drag()
 			_dragging = false
 		accept_event()
-	elif event is InputEventMouseMotion and _dragging:
-		var ang := ((event as InputEventMouseMotion).position - _center).angle()
-		_accum_angle += absf(angle_difference(_last_angle, ang))
-		_last_angle = ang
-		_update_spoon(ang)
-		_refresh()
+	elif event is InputEventMouseMotion:
+		var mm := event as InputEventMouseMotion
+		if _dragging:
+			var ang := (mm.position - _center).angle()
+			_accum_angle += absf(angle_difference(_last_angle, ang))
+			_last_angle = ang
+			_update_spoon(ang)
+			_refresh()
+		else:
+			# Hover di area aduk -> cursor HOVER (nandain bisa di-grab & diputar).
+			var inside := mm.position.distance_to(_center) <= _radius * 1.4
+			CursorManager.set_cursor(CursorManager.Cursor.HOVER if inside else CursorManager.Cursor.DEFAULT)
 
 
 func _update_spoon(ang: float) -> void:

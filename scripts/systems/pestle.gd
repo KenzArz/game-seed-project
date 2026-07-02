@@ -39,10 +39,10 @@ func _gui_input(event: InputEvent) -> void:
 			_offset = get_global_mouse_position() - global_position
 			z_index = 60
 			move_to_front()
-			CursorManager.set_cursor(CursorManager.Cursor.DRAG_BAHAN)  # sama kayak pegang bubuk
+			CursorManager.begin_drag(CursorManager.Cursor.DRAG_BAHAN)  # kunci grab selama menumbuk
 		elif _drag:
 			_drag = false
-			CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)
+			CursorManager.end_drag()
 			dilepas.emit()
 		accept_event()
 	elif event is InputEventMouseMotion and _drag:

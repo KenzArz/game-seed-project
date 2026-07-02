@@ -20,6 +20,7 @@ var cursor_drag_bahan: Texture2D
 var cursor_drag_guyon: Texture2D
 
 var _current_state := Cursor.DEFAULT
+var _drag_locked := false  # saat true, event hover diabaikan (cursor tetap grab)
 
 
 func _ready() -> void:
@@ -84,8 +85,35 @@ func _try_load(fname: String) -> Texture2D:
 
 
 ## Convenience: connect node's hover signals to cursor state changes.
+## Hover DIABAIKAN selama drag aktif (begin_drag), supaya cursor tetap grab.
 func connect_hover(node: Control) -> void:
 	if node == null:
 		return
-	node.mouse_entered.connect(func() -> void: set_cursor(Cursor.HOVER))
-	node.mouse_exited.connect(func() -> void: set_cursor(Cursor.DEFAULT))
+	node.mouse_entered.connect(_on_hover_enter)
+	node.mouse_exited.connect(_on_hover_exit)
+
+
+func _on_hover_enter() -> void:
+	if not _drag_locked:
+		set_cursor(Cursor.HOVER)
+
+
+func _on_hover_exit() -> void:
+	if not _drag_locked:
+		set_cursor(Cursor.DEFAULT)
+
+
+## Mulai drag: kunci cursor ke `state` (grab), abaikan hover sampai end_drag().
+func begin_drag(state: Cursor = Cursor.DRAG_BAHAN) -> void:
+	_drag_locked = true
+	set_cursor(state)
+
+
+## Selesai drag: buka kunci, balik ke cursor default.
+func end_drag() -> void:
+	_drag_locked = false
+	set_cursor(Cursor.DEFAULT)
+
+
+func is_dragging() -> bool:
+	return _drag_locked

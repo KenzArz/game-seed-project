@@ -186,7 +186,7 @@ func _advance_customer() -> void:
 # Bahan dilepas: kalau pas di atas ulekan & ulekan kosong -> isi. Bahan = sumber
 # tak habis, jadi selalu balik ke rak.
 func _on_bahan_dropped(item: DraggableItem) -> void:
-	CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)
+	CursorManager.end_drag()
 	if phase == Phase.CRAFTING:
 		var titik := item.get_global_rect().get_center()
 		if ulekan.atas_mangkuk(titik):
@@ -198,10 +198,10 @@ func _on_bahan_dropped(item: DraggableItem) -> void:
 	item.return_home()  # bahan = sumber tak habis, selalu balik ke rak
 
 
-# Item (bahan/bubuk) diangkat -> cursor jadi mode grab bahan.
+# Item (bahan/bubuk) diangkat -> kunci cursor ke mode grab bahan.
 func _on_item_diangkat(_item: DraggableItem) -> void:
 	AudioManager.play_sfx("drag")
-	CursorManager.set_cursor(CursorManager.Cursor.DRAG_BAHAN)
+	CursorManager.begin_drag(CursorManager.Cursor.DRAG_BAHAN)
 
 
 func _on_selesai_menumbuk(ids: Array) -> void:
@@ -216,7 +216,7 @@ func _on_selesai_menumbuk(ids: Array) -> void:
 # Bubuk dilepas: kalau pas di atas gayung -> semua bahannya masuk gayung. Kalau
 # tidak, balik ke tempatnya.
 func _on_bubuk_dropped(item: DraggableItem) -> void:
-	CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)
+	CursorManager.end_drag()
 	if phase == Phase.CRAFTING and _di_atas(item, gayung):
 		for id: String in _bubuk_ids:
 			gayung.tambah_bubuk(id, item.texture)
