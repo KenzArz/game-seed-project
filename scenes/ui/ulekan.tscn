@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://dcxlhicftibgt"]
+
+[ext_resource type="Script" uid="uid://bx138mufq8hku" path="res://scripts/systems/ulekan.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/placeholder_box.tscn" id="2"]
+[ext_resource type="Script" uid="uid://dovxg3eu4twm2" path="res://scripts/systems/pestle.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://2yjdu2k7xgjd" path="res://assets/sprites/ulekan_full.png" id="3_sclg7"]
+[ext_resource type="Texture2D" uid="uid://iobn0c4rchch" path="res://assets/sprites/ulekan_isi1.png" id="4_2ieuh"]
+[ext_resource type="Texture2D" uid="uid://waty7viq4s6a" path="res://assets/sprites/ulekan_isi2.png" id="5_d3c0p"]
+[ext_resource type="Texture2D" uid="uid://dfghawpagpj0a" path="res://assets/sprites/ulekan_isi3.png" id="6_dw74l"]
+[ext_resource type="Texture2D" uid="uid://cu1hdhu1kjopd" path="res://assets/sprites/ulekan_bawah.png" id="7_djphk"]
+[ext_resource type="Texture2D" uid="uid://dhhk3g1bdfx7p" path="res://assets/sprites/tool ulekan.png" id="9_sclg7"]
+
+[node name="Ulekan" type="Control" unique_id=2138607346]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 480.0
+offset_bottom = 300.0
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Mangkuk" parent="." unique_id=395961132 instance=ExtResource("2")]
+layout_mode = 0
+offset_top = 60.0
+offset_right = 340.0
+offset_bottom = 300.0
+mouse_filter = 2
+display_name = "Ulekan"
+texture = ExtResource("3_sclg7")
+box_color = Color(0.24, 0.28, 0.34, 1)
+
+[node name="UlekanIsi1" parent="." unique_id=882907935 instance=ExtResource("2")]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 105.0
+offset_right = 135.0
+offset_bottom = 195.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("4_2ieuh")
+box_color = Color(0.82, 0.76, 0.55, 1)
+
+[node name="UlekanIsi2" parent="." unique_id=1580428142 instance=ExtResource("2")]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 105.0
+offset_right = 215.0
+offset_bottom = 195.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("5_d3c0p")
+box_color = Color(0.82, 0.76, 0.55, 1)
+
+[node name="UlekanIsi3" parent="." unique_id=2116540439 instance=ExtResource("2")]
+layout_mode = 0
+offset_left = 205.0
+offset_top = 105.0
+offset_right = 295.0
+offset_bottom = 195.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("6_dw74l")
+box_color = Color(0.82, 0.76, 0.55, 1)
+
+[node name="MangkukDepan" parent="." unique_id=1224523503 instance=ExtResource("2")]
+layout_mode = 0
+offset_top = 195.0
+offset_right = 340.0
+offset_bottom = 300.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("7_djphk")
+box_color = Color(0.3, 0.35, 0.42, 1)
+
+[node name="Alat" type="Control" parent="." unique_id=1563135117]
+anchors_preset = 0
+offset_left = 347.0
+offset_top = 127.0
+offset_right = 423.0
+offset_bottom = 257.0
+script = ExtResource("3")
+display_name = "Alat Ulek"
+texture = ExtResource("9_sclg7")
+box_color = Color(0.32, 0.37, 0.44, 1)

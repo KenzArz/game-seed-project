@@ -13,8 +13,10 @@ signal serve_requested
 
 const MAX_STIR := 5
 
-@onready var _vessel: PlaceholderBox = $Vessel       # gayung
+@onready var _vessel: PlaceholderBox = $Vessel       # penanda geometri aduk (transparan)
 @onready var _spoon: PlaceholderBox = $Spoon         # sendok
+@onready var _air: PlaceholderBox = $Air             # layer air/ramuan (tampil saat mengaduk)
+@onready var _busa: Array = [$Busa1, $Busa2, $Busa3] # 3 tingkat busa, muncul bertahap
 @onready var _info: Label = $Info
 @onready var _progress_bg: ColorRect = $ProgressBg
 @onready var _progress_fill: ColorRect = $ProgressFill
@@ -43,6 +45,10 @@ func reset_stir() -> void:
 	stir_count = 0
 	_accum_angle = 0.0
 	_dragging = false
+	if _air:
+		_air.visible = true  # ramuan/air selalu tampil saat mengaduk
+	if _sajikan:
+		_sajikan.disabled = true  # baru bisa disajikan setelah adukan penuh
 	_update_spoon(-PI / 2.0)  # parkir sendok di atas
 	_refresh()
 
@@ -71,14 +77,31 @@ func _update_spoon(ang: float) -> void:
 
 func _refresh() -> void:
 	var rotations := _accum_angle / TAU
+	var frac := clampf(rotations / float(MAX_STIR), 0.0, 1.0)
 	var new_count: int = mini(MAX_STIR, int(floor(rotations)))
 	if new_count > stir_count:
 		stir_count = new_count
-		if _vessel:
-			_vessel.pop()
+		AudioManager.play_sfx("aduk")
+	_perbarui_busa(frac)  # busa muncul dikit-dikit seiring adukan
 	if _progress_fill and _progress_bg:
-		var overall := clampf(rotations / float(MAX_STIR), 0.0, 1.0)
-		_progress_fill.size = Vector2(_progress_bg.size.x * overall, _progress_fill.size.y)
+		_progress_fill.size = Vector2(_progress_bg.size.x * frac, _progress_fill.size.y)
+	if _sajikan:
+		_sajikan.disabled = stir_count < MAX_STIR  # baru aktif kalau sudah penuh
 	if _info:
 		var done := stir_count >= MAX_STIR
 		_info.text = "Adukan: %d/%d %s" % [stir_count, MAX_STIR, "(rata sempurna!)" if done else ""]
+
+
+# Tampilkan tingkat busa sesuai kemajuan adukan: makin banyak diaduk, makin banyak
+# busa (Busa1 -> Busa2 -> Busa3). Hanya satu tingkat tampil pada satu waktu.
+func _perbarui_busa(frac: float) -> void:
+	var level := 0
+	if frac >= 0.75:
+		level = 3
+	elif frac >= 0.45:
+		level = 2
+	elif frac >= 0.15:
+		level = 1
+	for i in range(_busa.size()):
+		if _busa[i]:
+			_busa[i].visible = (level == i + 1)

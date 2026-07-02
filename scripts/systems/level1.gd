@@ -1,85 +1,114 @@
-## KOORDINATOR / STAGE — orkestrasi tipis untuk alur ala Coffee Talk, digerakkan
-## oleh ANTREAN PELANGGAN. Scene meja racik dipakai ulang untuk tiap pelanggan;
-## yang berubah per "level" adalah CustomerData (nama, portrait, dialog, latar).
-## Untuk menambah level 2/3/..., tambahkan file CustomerData .tres — TIDAK perlu
-## menyalin scene ini.
+## KOORDINATOR / STAGE — alur meracik BARU, digerakkan ANTREAN PELANGGAN.
+## Satu ruangan (bukan split Coffee Talk): customer muncul di jendela, bahan di
+## rak, tumbuk di ulekan, tuang bubuk ke gayung, lalu aduk di stir panel.
 ##
 ## Siklus per pelanggan:
-##   dialog INTRO -> MIXING -> SERVING -> (STIR) -> sajikan
-##     -> pelanggan geser balik ke tengah -> dialog CLOSING
-##     -> pelanggan FADE OUT -> pelanggan berikutnya FADE IN (nama/aset baru) -> INTRO...
-##   Saat antrean habis -> layar DONE.
+##   customer FADE IN + dialog INTRO
+##     -> CRAFTING: drag bahan -> ulekan (tumbuk naik-turun) -> bubuk
+##        -> drag bubuk -> gayung (menumpuk) -> KLIK gayung
+##     -> STIR (full-screen, dipertahankan) -> sajikan
+##     -> dialog REAKSI (sesuai resep) -> customer FADE OUT -> pelanggan berikutnya
+##   Antrean habis -> DONE.
 ##
-## Arah transisi: menu racik/serve datang dari KANAN, pelanggan geser tengah<->kiri,
-## minigame aduk turun full-screen dari ATAS.
+## Layout dibuat di EDITOR (level1.tscn + sub-scene). Script = logika saja.
 extends Control
 
-enum Phase { INTRO, MIXING, SERVING, STIR, CLOSING, DONE }
+enum Phase { INTRO, CRAFTING, STIR, CLOSING, DONE }
 
 const DUR := 0.35
 
-## Urutan level. Isi di Inspector dengan men-drag file CustomerData .tres; kalau
-## dikosongkan, semua .tres di res://resources/customers/ dimuat otomatis.
+# Instruksi tutorial (suara Pak Guyon), muncul kontekstual & HANYA sekali (playthrough
+# pertama; disimpan lewat flag "tutorial_done" di save).
+const HINT_RAK := "Ambil bahan di rak, seret ke ulekan."
+const HINT_TUMBUK := "Tumbuk pakai alat ulek: gerakkan naik-turun sampai jadi butir."
+const HINT_GAYUNG := "Butirnya jadi! Seret ke gayung."
+const HINT_KLIK := "Klik gayung buat mengaduk jadi ramuan."
+
+## Urutan level. Kosongkan untuk memuat semua .tres di res://resources/customers/.
 @export var customers: Array[CustomerData] = []
 
 @onready var background: PlaceholderBox = $Background
-@onready var mixing_panel: MixingPanel = $MixingPanel
-@onready var serve_panel: ServePanel = $ServePanel
-@onready var customer_portrait: CustomerPortraitPanel = $CustomerPortraitPanel
+@onready var customer_window: CustomerWindow = $CustomerWindow
+@onready var ulekan: Ulekan = $Ulekan
+@onready var gayung: GayungStation = $Gayung
+@onready var bubuk: DraggableItem = $Bubuk
 @onready var stir_panel: StirPanel = $StirCanvas/StirPanel
+@onready var pak_guyon: PlaceholderBox = $PakGuyon
 @onready var debug_label: Label = $DebugCanvas/DebugLabel
+@onready var hint: Control = $Hint
+@onready var hint_label: Label = $Hint/Text
 
 var phase: int = Phase.INTRO
 var sedang_transisi := false
 var _customer_index := 0
 var _end_label: Label
-# Apa pun yang ada di node Background (Inspector) adalah default; pelanggan boleh
-# menimpanya, tapi kalau pelanggan mengosongkannya kita pakai default ini.
 var _default_bg_texture: Texture2D
 var _default_bg_color: Color
-var _racikan_terakhir: Array = []  # id bahan yang diracik player, buat pilih reaksi
+var _racikan_terakhir: Array = []       # id bahan di gayung saat disajikan
+var _bahan_items: Array = []            # semua DraggableItem bahan (grup "bahan")
+var _tex_bahan := {}                    # id -> texture bahan (buat visual isi)
+var _bubuk_ids: Array = []              # id bahan yang terkandung di bubuk hasil ulek
+var _tutorial := false                  # true = playthrough pertama, tampilkan hint
 
 
 func _ready() -> void:
+	GameState.set_state(GameState.State.CRAFTING)
+	AudioManager.play_bgm("gameplay")
+
 	if customers.is_empty():
 		customers = _load_default_customers()
 
-	# Dialog dirender addon Dialogic. timeline_ended diemit tiap timeline (intro
-	# atau closing) selesai; kita arahkan berdasarkan fase.
-	Dialogic.timeline_ended.connect(_on_dialogue_done)
-	mixing_panel.mix_requested.connect(_on_mix_requested)
-	serve_panel.trash_requested.connect(_on_trash)
-	serve_panel.serve_requested.connect(_on_serve)
-	serve_panel.stir_requested.connect(_on_stir)
+	# Kumpulkan bahan dari rak (grup "bahan"), sambungkan sinyal drop & angkat-nya.
+	_bahan_items = get_tree().get_nodes_in_group("bahan")
+	for item: DraggableItem in _bahan_items:
+		item.dropped.connect(_on_bahan_dropped)
+		item.picked_up.connect(_on_item_diangkat)
+		_tex_bahan[item.id] = item.texture
+
+	bubuk.dropped.connect(_on_bubuk_dropped)
+	bubuk.picked_up.connect(_on_item_diangkat)
+	bubuk.visible = false
+
+	ulekan.selesai_menumbuk.connect(_on_selesai_menumbuk)
+	gayung.minta_stir.connect(_on_minta_stir)
 	stir_panel.serve_requested.connect(_on_serve)
 
-	# Parkir menu-menu di luar layar; pelanggan tetap di layar (di tengah).
-	mixing_panel.place_off(CraftPanel.Dir.RIGHT)
-	serve_panel.place_off(CraftPanel.Dir.RIGHT)
+	Dialogic.timeline_ended.connect(_on_dialogue_done)
+	if Dialogic.has_subsystem("Text"):
+		Dialogic.Text.about_to_show_text.connect(_on_dialogic_line)
+
+	pak_guyon.modulate.a = 0.0
 	stir_panel.place_off(CraftPanel.Dir.TOP)
-	customer_portrait.place_center()
 
 	if background:
 		_default_bg_texture = background.texture
 		_default_bg_color = background.box_color
 
 	_build_end_label()
-	_customer_index = 0
+
+	# Mulai dari pelanggan tersimpan (fitur Lanjutkan).
+	var data := SaveManager.load_data()
+	_customer_index = int(data.get("customer_index", 0))
+	if _customer_index < 0 or _customer_index >= customers.size():
+		_customer_index = 0
+	# Tutorial cuma di playthrough pertama (belum pernah selesai sekali pun).
+	_tutorial = not bool(data.get("tutorial_done", false))
+	if hint:
+		hint.visible = false
 	_start_customer(_customer_index)
 
 
 func _process(_delta: float) -> void:
-	var nama_pelanggan := "-"
+	var nama := "-"
 	if _customer_index < customers.size():
-		nama_pelanggan = customers[_customer_index].display_name
-	debug_label.text = "CUSTOMER: %s (%d/%d)\nPHASE: %s\nINGREDIENTS: %s (%d/3)\nSTIR: %d/5\nTRANSITIONING: %s" % [
-		nama_pelanggan,
+		nama = customers[_customer_index].display_name
+	debug_label.text = "CUSTOMER: %s (%d/%d)\nPHASE: %s\nULEKAN: %s\nGAYUNG: %s\nTRANSISI: %s" % [
+		nama,
 		mini(_customer_index + 1, customers.size()),
 		customers.size(),
 		Phase.keys()[phase],
-		str(mixing_panel.contents),
-		mixing_panel.contents.size(),
-		stir_panel.stir_count,
+		str(ulekan.ada_isi()),
+		str(gayung.isi_ids()),
 		str(sedang_transisi),
 	]
 
@@ -88,16 +117,203 @@ func _process(_delta: float) -> void:
 
 func _start_customer(index: int) -> void:
 	var pelanggan := customers[index]
-	customer_portrait.configure(pelanggan.display_name, pelanggan.npc_color, pelanggan.npc_texture)
-	customer_portrait.set_center_instant()
+	customer_window.set_customer(pelanggan.display_name, pelanggan.npc_color, pelanggan.npc_texture)
+	customer_window.set_hidden_instant()
+	customer_window.fade_in(DUR)
 	_apply_background(pelanggan)
+	_set_bahan_tersedia(pelanggan.available_ingredients)  # unlock cerita
+	_reset_station()
+	_set_craft_enabled(false)  # crafting dibuka setelah dialog intro
 	phase = Phase.INTRO
 	_play_dialogue(pelanggan.intro_timeline, pelanggan.intro_lines)
 
 
-## Mulai dialog lewat Dialogic. Kalau diberi resource timeline, dipakai apa adanya
-## (fitur Dialogic penuh); kalau tidak, timeline dibangun dadakan dari baris teks
-## biasa (tiap baris = 1 text event).
+func _reset_station() -> void:
+	ulekan.kosong()
+	gayung.kosong()
+	bubuk.visible = false
+	_bubuk_ids.clear()
+	for item: DraggableItem in _bahan_items:
+		item.return_home()
+
+
+# Tampilkan hanya bahan yang tersedia untuk pelanggan ini (kosong = semua).
+func _set_bahan_tersedia(ids: PackedStringArray) -> void:
+	for item: DraggableItem in _bahan_items:
+		item.visible = ids.is_empty() or ids.has(item.id)
+
+
+# Aktif/nonaktifkan interaksi meracik (drag bahan, tumbuk, klik gayung).
+func _set_craft_enabled(on: bool) -> void:
+	ulekan.aktif = on
+	gayung.aktif = on
+	for item: DraggableItem in _bahan_items:
+		item.drag_enabled = on
+	bubuk.drag_enabled = on
+
+
+# Setelah dialog closing: fade-out customer, datangkan pelanggan berikutnya.
+func _advance_customer() -> void:
+	sedang_transisi = true
+	customer_window.fade_out(DUR)
+	await get_tree().create_timer(DUR).timeout
+
+	_customer_index += 1
+	if _customer_index >= customers.size():
+		SaveManager.clear()  # tamat
+		_show_end()
+		sedang_transisi = false
+		return
+
+	# Merge ke save yang ada (JANGAN nimpa) supaya field lain seperti tutorial_done
+	# tidak ikut terhapus.
+	var d := SaveManager.load_data()
+	d["has_save"] = true
+	d["seen_intro"] = true
+	d["customer_index"] = _customer_index
+	SaveManager.save(d)
+	sedang_transisi = false
+	_start_customer(_customer_index)
+
+
+# --- Interaksi meracik -------------------------------------------------------
+
+# Bahan dilepas: kalau pas di atas ulekan & ulekan kosong -> isi. Bahan = sumber
+# tak habis, jadi selalu balik ke rak.
+func _on_bahan_dropped(item: DraggableItem) -> void:
+	if phase == Phase.CRAFTING:
+		var titik := item.get_global_rect().get_center()
+		if ulekan.atas_mangkuk(titik):
+			var slot := ulekan.slot_terdekat(titik)  # masuk ke slot tempat di-drop
+			if ulekan.boleh_isi_slot(slot):
+				ulekan.isi_slot(slot, item.id, item.texture)
+				if ulekan.jumlah() == 2:
+					_show_hint(HINT_TUMBUK)  # 2 bahan masuk -> instruksi menumbuk
+	item.return_home()  # bahan = sumber tak habis, selalu balik ke rak
+
+
+# Ulekan selesai ditumbuk -> munculkan bubuk hasil (membawa SEMUA id bahannya).
+func _on_item_diangkat(_item: DraggableItem) -> void:
+	AudioManager.play_sfx("drag")
+
+
+func _on_selesai_menumbuk(ids: Array) -> void:
+	_bubuk_ids = ids
+	bubuk.return_home()
+	bubuk.visible = true
+	bubuk.drag_enabled = true
+	AudioManager.play_sfx("bubuk")
+	_show_hint(HINT_GAYUNG)  # butir jadi -> ajari seret ke gayung
+
+
+# Bubuk dilepas: kalau pas di atas gayung -> semua bahannya masuk gayung. Kalau
+# tidak, balik ke tempatnya.
+func _on_bubuk_dropped(item: DraggableItem) -> void:
+	if phase == Phase.CRAFTING and _di_atas(item, gayung):
+		for id: String in _bubuk_ids:
+			gayung.tambah_bubuk(id, item.texture)
+		_bubuk_ids.clear()
+		item.visible = false  # bubuk habis dipakai
+		_show_hint(HINT_KLIK)  # bubuk masuk gayung -> ajari klik untuk mengaduk
+	else:
+		item.return_home()
+
+
+# Gayung diklik (sudah ada isi) -> masuk stir panel.
+func _on_minta_stir() -> void:
+	if phase != Phase.CRAFTING or sedang_transisi:
+		return
+	AudioManager.play_sfx("gayung")
+	_selesai_tutorial()  # sampai sini = pemain sudah paham; matikan hint selamanya
+	sedang_transisi = true
+	phase = Phase.STIR
+	_racikan_terakhir = gayung.isi_ids()
+	_set_craft_enabled(false)
+	stir_panel.reset_stir()
+	stir_panel.slide_in(CraftPanel.Dir.TOP, DUR)
+	await get_tree().create_timer(DUR).timeout
+	sedang_transisi = false
+
+
+# Selesai mengaduk -> dialog reaksi sesuai resep.
+func _on_serve() -> void:
+	if phase != Phase.STIR:
+		return
+	AudioManager.play_sfx("sajikan")
+	sedang_transisi = true
+	phase = Phase.CLOSING
+	stir_panel.slide_out(CraftPanel.Dir.TOP, DUR)
+	await get_tree().create_timer(DUR).timeout
+	gayung.kosong()
+	sedang_transisi = false
+	var pelanggan := customers[_customer_index]
+	_play_dialogue(null, _pick_reaction(pelanggan, _racikan_terakhir))
+
+
+# Apakah pusat `item` berada di dalam rect global `target`.
+func _di_atas(item: Control, target: Control) -> bool:
+	return target.get_global_rect().has_point(item.get_global_rect().get_center())
+
+
+# --- Dialog ------------------------------------------------------------------
+
+func _on_dialogue_done() -> void:
+	_fade_pak_guyon(0.0)
+	if sedang_transisi:
+		return
+	match phase:
+		Phase.INTRO:
+			phase = Phase.CRAFTING
+			_set_craft_enabled(true)  # buka meracik
+			_show_hint(HINT_RAK)  # langkah pertama tutorial
+		Phase.CLOSING:
+			_advance_customer()
+
+
+# Pop-up Pak Guyon muncul HANYA saat baris dialog miliknya (diawali "(Pak Guyon").
+func _on_dialogic_line(info: Dictionary) -> void:
+	var teks: String = info.get("text", "")
+	_fade_pak_guyon(1.0 if teks.contains("(Pak Guyon") else 0.0)
+
+
+func _fade_pak_guyon(target_a: float) -> void:
+	if pak_guyon == null:
+		return
+	var t := create_tween()
+	t.tween_property(pak_guyon, "modulate:a", target_a, 0.25)
+
+
+# --- Tutorial hint (kontekstual, non-blocking, sekali seumur save) ------------
+
+func _show_hint(teks: String) -> void:
+	if not _tutorial or hint == null:
+		return
+	hint_label.text = teks
+	hint.visible = true
+	hint.modulate.a = 0.0
+	create_tween().tween_property(hint, "modulate:a", 1.0, 0.25)
+
+
+func _hide_hint() -> void:
+	if hint == null:
+		return
+	var t := create_tween()
+	t.tween_property(hint, "modulate:a", 0.0, 0.2)
+	t.tween_callback(func() -> void: hint.visible = false)
+
+
+# Pemain sudah menyelesaikan alur sekali -> matikan tutorial & simpan supaya tidak
+# muncul lagi di sesi/pelanggan berikutnya.
+func _selesai_tutorial() -> void:
+	if not _tutorial:
+		return
+	_tutorial = false
+	_hide_hint()
+	var d := SaveManager.load_data()
+	d["tutorial_done"] = true
+	SaveManager.save(d)
+
+
 func _play_dialogue(timeline_res: DialogicTimeline, baris: PackedStringArray) -> void:
 	var tl: DialogicTimeline = timeline_res
 	if tl == null:
@@ -109,7 +325,6 @@ func _play_dialogue(timeline_res: DialogicTimeline, baris: PackedStringArray) ->
 func _apply_background(pelanggan: CustomerData) -> void:
 	if not background:
 		return
-	# Texture pelanggan menimpa default Inspector; kalau kosong, pakai default.
 	if pelanggan.background_texture != null:
 		background.texture = pelanggan.background_texture
 		background.box_color = pelanggan.background_color
@@ -118,117 +333,9 @@ func _apply_background(pelanggan: CustomerData) -> void:
 		background.box_color = _default_bg_color
 
 
-# Setelah dialog closing: fade-out pelanggan ini, datangkan pelanggan berikutnya.
-func _advance_customer() -> void:
-	sedang_transisi = true
-	customer_portrait.fade_out(DUR)
-	await get_tree().create_timer(DUR).timeout
+# --- Pencocokan resep (dipertahankan) ----------------------------------------
 
-	_customer_index += 1
-	if _customer_index >= customers.size():
-		_show_end()
-		sedang_transisi = false
-		return
-
-	# Siapkan pelanggan berikutnya saat tersembunyi, lalu fade-in portrait barunya.
-	var pelanggan := customers[_customer_index]
-	customer_portrait.configure(pelanggan.display_name, pelanggan.npc_color, pelanggan.npc_texture)
-	customer_portrait.set_center_instant()
-	_apply_background(pelanggan)
-	customer_portrait.fade_in(DUR)
-	phase = Phase.INTRO
-	await get_tree().create_timer(DUR).timeout
-	sedang_transisi = false
-	_play_dialogue(pelanggan.intro_timeline, pelanggan.intro_lines)
-
-
-# --- Transisi antar fase -----------------------------------------------------
-
-func _on_dialogue_done() -> void:
-	if sedang_transisi:
-		return
-	match phase:
-		Phase.INTRO:
-			_go_to_mixing()
-		Phase.CLOSING:
-			_advance_customer()
-
-
-# INTRO -> MIXING
-func _go_to_mixing() -> void:
-	sedang_transisi = true
-	phase = Phase.MIXING
-	# Pelanggan yang sama geser tengah -> kiri; menu racik masuk dari KANAN.
-	customer_portrait.move_to_left(DUR)
-	mixing_panel.slide_in(CraftPanel.Dir.RIGHT, DUR)
-	await get_tree().create_timer(DUR).timeout
-	sedang_transisi = false
-
-
-# MIXING -> SERVING
-func _on_mix_requested(racikan: Array) -> void:
-	if sedang_transisi:
-		return
-	sedang_transisi = true
-	phase = Phase.SERVING
-	_racikan_terakhir = racikan.duplicate()  # ingat racikannya buat reaksi nanti
-	mixing_panel.slide_out(CraftPanel.Dir.LEFT, DUR)
-	serve_panel.set_result(_result_name(customers[_customer_index], _racikan_terakhir))
-	serve_panel.slide_in(CraftPanel.Dir.RIGHT, DUR)
-	await get_tree().create_timer(DUR).timeout
-	sedang_transisi = false
-
-
-# SERVING -> MIXING (buang)
-func _on_trash() -> void:
-	# Guard berbasis fase (bukan sedang_transisi) supaya klik tidak hilang saat
-	# slide-in; fase berubah setelah aksi, mencegah trigger ganda.
-	if phase != Phase.SERVING:
-		return
-	sedang_transisi = true
-	phase = Phase.MIXING
-	serve_panel.slide_out(CraftPanel.Dir.RIGHT, DUR)
-	mixing_panel.reset_station()
-	mixing_panel.slide_in(CraftPanel.Dir.RIGHT, DUR)
-	await get_tree().create_timer(DUR).timeout
-	sedang_transisi = false
-
-
-# SERVING -> STIR (full-screen, dari atas)
-func _on_stir() -> void:
-	if phase != Phase.SERVING:
-		return
-	sedang_transisi = true
-	phase = Phase.STIR
-	stir_panel.reset_stir()
-	stir_panel.slide_in(CraftPanel.Dir.TOP, DUR)
-	await get_tree().create_timer(DUR).timeout
-	sedang_transisi = false
-
-
-# sajikan (dari layar serve atau stir) -> dialog CLOSING dengan pelanggan ini
-func _on_serve() -> void:
-	if phase != Phase.SERVING and phase != Phase.STIR:
-		return
-	sedang_transisi = true
-	phase = Phase.CLOSING
-	stir_panel.slide_out(CraftPanel.Dir.TOP, DUR)
-	serve_panel.slide_out(CraftPanel.Dir.RIGHT, DUR)
-	customer_portrait.move_to_center(DUR)  # pelanggan geser balik ke tengah buat ngobrol
-	await get_tree().create_timer(DUR).timeout
-
-	mixing_panel.reset_station()
-	stir_panel.reset_stir()
-	await get_tree().create_timer(DUR).timeout
-	sedang_transisi = false
-	# Pilih reaksi berdasarkan berapa bahan resep yang cocok (tanpa skor).
-	var pelanggan := customers[_customer_index]
-	_play_dialogue(null, _pick_reaction(pelanggan, _racikan_terakhir))
-
-
-## Tingkat kecocokan racikan player vs resep pelanggan:
-## 2 = pas (semua bahan resep & tanpa tambahan), 1 = sebagian (>=1 benar),
-## 0 = salah (tidak ada yang benar). Dipakai untuk nama hasil DAN reaksi dialog.
+## 2 = pas (semua bahan resep & tanpa tambahan), 1 = sebagian, 0 = salah.
 func _match_tier(pelanggan: CustomerData, racikan: Array) -> int:
 	var benar := 0
 	for id_bahan in pelanggan.recipe:
@@ -241,22 +348,13 @@ func _match_tier(pelanggan: CustomerData, racikan: Array) -> int:
 	return 0
 
 
-## Nama busa yang tampil di layar serve, per tingkat kecocokan.
-func _result_name(pelanggan: CustomerData, racikan: Array) -> String:
-	match _match_tier(pelanggan, racikan):
-		2: return pelanggan.result_perfect
-		1: return pelanggan.result_partial
-		_: return pelanggan.result_wrong
-
-
-## Baris reaksi yang dimainkan setelah disajikan, per tingkat kecocokan.
 func _pick_reaction(pelanggan: CustomerData, racikan: Array) -> PackedStringArray:
 	var baris: PackedStringArray
 	match _match_tier(pelanggan, racikan):
 		2: baris = pelanggan.react_perfect
 		1: baris = pelanggan.react_partial
 		_: baris = pelanggan.react_wrong
-	if baris.is_empty():  # jaring pengaman kalau satu tingkat dibiarkan kosong
+	if baris.is_empty():
 		baris = PackedStringArray(["..."])
 	return baris
 
@@ -276,29 +374,27 @@ func _build_end_label() -> void:
 
 func _show_end() -> void:
 	phase = Phase.DONE
-	if _end_label:
-		_end_label.visible = true
+	_set_craft_enabled(false)
+	# Antrean habis -> lanjut ke ending sinematik (ACT 7-9).
+	SceneManager.change_to("res://scenes/chapters/ending.tscn")
 
 
-# --- Data level default (dipakai saat export `customers` dikosongkan) ---------
+# --- Data level default ------------------------------------------------------
 
-## Memuat SEMUA CustomerData di res://resources/customers/, urut nama file (jadi
-## 01_, 02_, 03_, ... menentukan urutan). Untuk menambah karakter cukup taruh
-## file .tres baru di folder itu — tanpa edit kode/array.
 func _load_default_customers() -> Array[CustomerData]:
 	const DIR := "res://resources/customers/"
 	var arr: Array[CustomerData] = []
 	var files := DirAccess.get_files_at(DIR)
 	files.sort()
 	for f in files:
-		var fname := f.trim_suffix(".remap")  # build hasil export menambah .remap
+		var fname := f.trim_suffix(".remap")
 		if not (fname.ends_with(".tres") or fname.ends_with(".res")):
 			continue
 		var r := load(DIR + fname)
 		if r is CustomerData:
 			arr.append(r)
 	if arr.is_empty():
-		arr.append(_fallback_customer())  # jaring pengaman terakhir biar scene selalu jalan
+		arr.append(_fallback_customer())
 	return arr
 
 

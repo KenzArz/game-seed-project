@@ -7,10 +7,13 @@ script = ExtResource("1")
 id = "monster_debu"
 display_name = "Monster Debu"
 npc_color = Color(0.5, 0.5, 0.45, 1)
+available_ingredients = PackedStringArray("sabun", "shampo", "pasta", "bedak", "mint", "garam")
 recipe = PackedStringArray("sabun", "shampo", "garam")
 result_perfect = "Ocean Cloud"
-intro_lines = PackedStringArray("GRRR! Aku Monster Debu! Seluruh tubuhku penuh debu menyebalkan!", "Buatkan busa yang KUAT membersihkan! Yang tebal berbusa seperti ombak!", "Kalau debunya tidak hilang... aku akan makin marah!")
-react_perfect = PackedStringArray("Ombaknya... menyapu semua debuku!", "Hmph... aku jadi bersih. Dan... tenang. Te-terima kasih. (malu)")
-react_partial = PackedStringArray("Grr, sebagian debu masih nempel di badanku!", "Butuh yang lebih kuat membersihkan... garam mandinya jangan lupa!")
-react_wrong = PackedStringArray("GROAAR! Debuku malah nggak hilang sama sekali!", "Aku mau yang KUAT bersih-bersihnya! Busa tebal! Garam!")
+result_partial = "Busa Setengah Jadi"
+result_wrong = "Debu Berbusa"
+intro_lines = PackedStringArray("JANGAN PANIK. Aku cuma mau bersih.", "Aku sudah lama tidak benar-benar bersih. Debu ini menempel terlalu lama.", "Aku butuh yang [color=#C9A84C]kuat[/color], yang bisa [color=#C9A84C]membersihkan sampai dalam[/color]. Bukan cuma di permukaan.", "Tapi [color=#C9A84C]bukan yang dingin[/color], aku sudah cukup kedinginan. Kasih yang ada [color=#C9A84C]efek ombak[/color]-nya!", "(Pak Guyon serius) Membersihkan sampai dalam, efek ombak... Ada bahan baru yang rasanya seperti laut. Lihat rak.")
+react_perfect = PackedStringArray("...Ombaknya menyapu semua debuku. Terima kasih.", "Waktu kecil aku suka garam laut. Seperti laut tahu cara membersihkan sesuatu yang jauh lebih besar dari dirinya.")
+react_partial = PackedStringArray("Grr, sebagian debu masih nempel!", "Butuh yang lebih kuat membersihkan... garam jangan lupa!")
+react_wrong = PackedStringArray("GROAAR! Debuku malah nggak hilang!", "Aku mau yang KUAT bersih-bersihnya! Garam!")
 background_color = Color(0.15, 0.15, 0.14, 1)

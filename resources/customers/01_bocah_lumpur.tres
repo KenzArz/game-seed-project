@@ -1,18 +1,21 @@
-[gd_resource type="Resource" script_class="CustomerData" format=3 uid="uid://c2l8hesavj3v0"]
+[gd_resource type="Resource" script_class="CustomerData" load_steps=3 format=3]
 
-[ext_resource type="Script" uid="uid://dxux8k38j6pyu" path="res://scripts/systems/customer_data.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://cly3qebywvayr" path="res://assets/sprites/char1.png" id="1_6kk3e"]
+[ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cly3qebywvayr" path="res://assets/sprites/char1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
 id = "bocah_lumpur"
 display_name = "Bocah Lumpur"
 npc_color = Color(0.55, 0.45, 0.3, 1)
-npc_texture = ExtResource("1_6kk3e")
-recipe = PackedStringArray("sabun", "shampo", "mint")
+npc_texture = ExtResource("2")
+available_ingredients = PackedStringArray("sabun", "shampo")
+recipe = PackedStringArray("sabun", "shampo")
 result_perfect = "Cloud Foam"
-intro_lines = PackedStringArray("Kakak! Kakak! Aku abis main lumpur seharian, badanku kotor semua hihi!", "Aku mau [color=#FFD700]busa tebal[/color] yang [color=#FFD700]banyak gelembungnya[/color], biar bisa kuterbangin tinggi!", "Terus yang [color=#FFD700]seger[/color] juga ya, biar besok aku semangat main lagi!")
-react_perfect = PackedStringArray("WAAAH gelembungnya banyak bangeet!", "Seger! Wangi! Aku bisa main gelembung sampai sore!", "Makasih kakak, kakak hebat!")
-react_partial = PackedStringArray("Hmm... lumayan sih, tapi gelembungnya cepet ilang...", "Coba ditambah yang bikin busanya makin banyak sama yang seger gitu kak.")
-react_wrong = PackedStringArray("Lho kok... ini malah nggak ada gelembungnya?", "Aku kan mau yang banyak busanya, kak... yang seger juga.")
+result_partial = "Busa Tipis"
+result_wrong = "Air Keruh"
+intro_lines = PackedStringArray("Kak! Kak! Aku abis main di sungai, liat lumpurnya sebanyak ini!", "Ibu bilang aku harus bersih sebelum makan. Busanya harus [color=#C9A84C]banyak gelembungnya[/color] biar lumpurnya keangkat!", "Aku mau yang [color=#C9A84C]cepet hilang busanya[/color] juga, biar bisa balik main lagi!", "(Pak Guyon berbisik) Banyak gelembung, cepat hilang... bahan apa yang paling suka bikin ribut di permukaan air?")
+react_perfect = PackedStringArray("Enak banget! Busanya banyak gelembungnya!", "Oh iya Kak, tadi aku ngunyah daun mint, nafasku jadi sejuk banget! Kayak es dari dalem!")
+react_partial = PackedStringArray("Hmm, gelembungnya kurang banyak nih Kak...", "Coba tambah yang suka bikin busa rame ya!")
+react_wrong = PackedStringArray("Lho kok nggak ada gelembungnya? Aku kan mau yang rame busanya, Kak.")
 background_color = Color(0.18, 0.16, 0.13, 1)

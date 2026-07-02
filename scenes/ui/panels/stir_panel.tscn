@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://busafant_stirp"]
+[gd_scene load_steps=9 format=3 uid="uid://busafant_stirp"]
 
 [ext_resource type="Script" path="res://scripts/systems/stir_panel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://busafant_phbox01" path="res://scenes/ui/placeholder_box.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://chbev82di77vp" path="res://assets/backgrounds/Slots-Sprite.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://3cxkn6amvogw" path="res://assets/backgrounds/Background5_Aduk Bahan_Meja.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://byjnxnkaxaal8" path="res://assets/backgrounds/Background5_Aduk Bahan_Gayung.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bimo24ygbq68p" path="res://assets/backgrounds/Background5_Aduk Bahan_Air Sabun.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bp07dr0s04l2v" path="res://assets/backgrounds/Background5_Aduk Bahan_Busa1.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://df43x88xknhh1" path="res://assets/backgrounds/Background5_Aduk Bahan_Busa2.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://d3ofijtlql8ma" path="res://assets/backgrounds/Background5_Aduk Bahan_Busa3.png" id="8"]
 
 [node name="StirPanel" type="Control"]
 layout_mode = 3
@@ -11,36 +16,66 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 script = ExtResource("1")
 
-[node name="Backdrop" parent="." instance=ExtResource("2")]
+[node name="Meja" parent="." instance=ExtResource("2")]
 layout_mode = 1
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 display_name = ""
-box_color = Color(0.1, 0.09, 0.13, 1)
+texture = ExtResource("3")
 
-[node name="Title" type="Label" parent="."]
+[node name="Gayung" parent="." instance=ExtResource("2")]
 layout_mode = 1
-offset_left = 0.0
-offset_top = 60.0
 offset_right = 1920.0
-offset_bottom = 110.0
+offset_bottom = 1080.0
 mouse_filter = 2
-theme_override_font_sizes/font_size = 30
-text = "MENGADUK RAMUAN"
-horizontal_alignment = 1
-vertical_alignment = 1
+display_name = ""
+texture = ExtResource("4")
+
+[node name="Air" parent="." instance=ExtResource("2")]
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("5")
+
+[node name="Busa1" parent="." instance=ExtResource("2")]
+visible = false
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("6")
+
+[node name="Busa2" parent="." instance=ExtResource("2")]
+visible = false
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("7")
+
+[node name="Busa3" parent="." instance=ExtResource("2")]
+visible = false
+layout_mode = 1
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+display_name = ""
+texture = ExtResource("8")
 
 [node name="Vessel" parent="." instance=ExtResource("2")]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
-offset_left = 750.0
-offset_top = 230.0
-offset_right = 1170.0
-offset_bottom = 650.0
+offset_left = 560.0
+offset_top = 190.0
+offset_right = 1180.0
+offset_bottom = 810.0
 mouse_filter = 2
-display_name = "Putar untuk mengaduk"
-box_color = Color(0.45, 0.3, 0.2, 1)
-texture = ExtResource("3")
+display_name = ""
 
 [node name="Spoon" parent="." instance=ExtResource("2")]
 layout_mode = 1
@@ -52,30 +87,41 @@ mouse_filter = 2
 display_name = "S"
 box_color = Color(0.85, 0.8, 0.7, 1)
 
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+offset_top = 40.0
+offset_right = 1920.0
+offset_bottom = 90.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 30
+text = "MENGADUK RAMUAN"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="ProgressBg" type="ColorRect" parent="."]
 layout_mode = 1
 offset_left = 760.0
-offset_top = 720.0
+offset_top = 900.0
 offset_right = 1160.0
-offset_bottom = 748.0
+offset_bottom = 928.0
 mouse_filter = 2
 color = Color(0.2, 0.2, 0.25, 1)
 
 [node name="ProgressFill" type="ColorRect" parent="."]
 layout_mode = 1
 offset_left = 760.0
-offset_top = 720.0
+offset_top = 900.0
 offset_right = 760.0
-offset_bottom = 748.0
+offset_bottom = 928.0
 mouse_filter = 2
 color = Color(0.5, 0.8, 0.55, 1)
 
 [node name="Info" type="Label" parent="."]
 layout_mode = 1
 offset_left = 760.0
-offset_top = 760.0
+offset_top = 936.0
 offset_right = 1160.0
-offset_bottom = 800.0
+offset_bottom = 976.0
 mouse_filter = 2
 theme_override_font_sizes/font_size = 30
 text = "Adukan: 0/5"
@@ -84,7 +130,7 @@ horizontal_alignment = 1
 [node name="Sajikan" type="Button" parent="."]
 layout_mode = 1
 offset_left = 860.0
-offset_top = 820.0
+offset_top = 986.0
 offset_right = 1060.0
-offset_bottom = 890.0
+offset_bottom = 1050.0
 text = "SAJIKAN"
