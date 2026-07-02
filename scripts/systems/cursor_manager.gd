@@ -12,6 +12,7 @@ enum Cursor { DEFAULT, HOVER, DRAG_BAHAN, DRAG_GUYON }
 
 const DIR := "res://assets/cursor + toggle suhu/"
 const HOTSPOT := Vector2.ZERO  # atur per aset kalau perlu (mis. ujung panah)
+const CURSOR_SIZE := 48  # sprite aslinya 400x400 -> diperkecil ke ukuran cursor wajar
 
 var cursor_default: Texture2D
 var cursor_hover: Texture2D
@@ -60,10 +61,26 @@ func _texture_for(state: Cursor) -> Texture2D:
 
 func _try_load(fname: String) -> Texture2D:
 	var path := DIR + fname
-	if ResourceLoader.exists(path):
-		return load(path) as Texture2D
-	push_warning("CursorManager: aset cursor tak ditemukan: " + path)
-	return null
+	if not ResourceLoader.exists(path):
+		push_warning("CursorManager: aset cursor tak ditemukan: " + path)
+		return null
+	var tex := load(path) as Texture2D
+	if tex == null:
+		return null
+	# Sprite aslinya 400x400 — perkecil ke CURSOR_SIZE (jaga rasio) supaya cursor
+	# tidak raksasa. Custom mouse cursor Godot pakai ukuran native texture.
+	var img := tex.get_image()
+	if img == null:
+		return tex
+	if img.is_compressed():
+		img.decompress()
+	var longest := maxi(img.get_width(), img.get_height())
+	if longest > CURSOR_SIZE:
+		var s := float(CURSOR_SIZE) / float(longest)
+		var w := maxi(1, int(round(img.get_width() * s)))
+		var h := maxi(1, int(round(img.get_height() * s)))
+		img.resize(w, h, Image.INTERPOLATE_LANCZOS)
+	return ImageTexture.create_from_image(img)
 
 
 ## Convenience: connect node's hover signals to cursor state changes.
