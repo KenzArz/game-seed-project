@@ -7,10 +7,13 @@ script = ExtResource("1")
 id = "mystery_child"
 display_name = "Mystery Child"
 npc_color = Color(0.5, 0.45, 0.6, 1)
+available_ingredients = PackedStringArray("sabun", "shampo", "pasta", "bedak", "mint", "garam")
 recipe = PackedStringArray("bedak", "mint", "garam")
 result_perfect = "Morning Breeze"
-intro_lines = PackedStringArray("...halo.", "Aku... nggak tahu aku mau apa. Aku cuma merasa kurang... cukup.", "Buatkan saja apa yang menurut kakak baik untukku ya.")
-react_perfect = PackedStringArray("...ini hangat sekali.", "Untuk pertama kalinya, aku merasa... aku cukup, apa adanya.", "Terima kasih sudah meracikku dengan sepenuh hati.")
-react_partial = PackedStringArray("...nggak sempurna ya. Tapi nggak apa-apa.", "Justru karena nggak sempurna, ini terasa jujur. Aku suka.")
-react_wrong = PackedStringArray("...ini bukan yang orang-orang bilang 'bagus'.", "Tapi kakak membuatnya untukku. Itu saja sudah lebih dari cukup. Terima kasih.")
+result_partial = "Busa Jujur"
+result_wrong = "Busa Apa Adanya"
+intro_lines = PackedStringArray("...Kamu tidak ingat aku?", "Aku mau semuanya. Bukan karena aku kotor. Tapi aku ingin tahu rasanya kalau semua bagian diriku benar-benar bersih.", "Yang [color=#C9A84C]tebal[/color] tapi [color=#C9A84C]banyak gelembung[/color]. Yang [color=#C9A84C]dingin tajam[/color] tapi [color=#C9A84C]hangat lembut[/color]. Yang [color=#C9A84C]segar[/color] tapi [color=#C9A84C]membersihkan dalam[/color].", "Kamu bisa, kan?", "(Pak Guyon serak) Ini yang paling sulit. Bukan karena bahannya, tapi karena kamu harus jujur mau meracik apa. Tidak ada salah di sini.")
+react_perfect = PackedStringArray("...ini hangat sekali. Untuk pertama kalinya aku merasa cukup, apa adanya.", "Terima kasih sudah kembali. Aku menunggumu lama sekali.")
+react_partial = PackedStringArray("...nggak sempurna ya. Tapi nggak apa-apa.", "Justru karena nggak sempurna, ini terasa jujur. Terima kasih sudah kembali.")
+react_wrong = PackedStringArray("...ini bukan yang orang bilang 'bagus'. Tapi kamu membuatnya untukku.", "Itu saja sudah lebih dari cukup. Terima kasih sudah kembali.")
 background_color = Color(0.15, 0.14, 0.18, 1)

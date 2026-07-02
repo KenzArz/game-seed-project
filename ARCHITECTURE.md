@@ -1,318 +1,226 @@
 # Busa Fantasi — Arsitektur & Logika Kode
 
-Dokumen teknis: bagaimana script, class, variable, signal, dan function saling
-terhubung. Untuk panduan pemakaian (tambah dialog, ganti aset), lihat
-[README.md](README.md).
+Dokumen teknis: bagaimana scene, class, signal, dan autoload saling terhubung.
+Untuk panduan pemakaian (tambah pelanggan, ganti aset), lihat [README.md](README.md).
+
+> Engine **Godot 4.6**, desain **1920×1080** (stretch `canvas_items`, aspect `keep`).
 
 ---
 
-## 1. Soal file `.gd.uid`
-
-Mulai **Godot 4.4+**, setiap script `.gd` punya pendamping `.gd.uid` (mis.
-`level1.gd.uid`) berisi satu ID unik, contohnya `uid://dxakgk5gjcksa`.
-
-- **Fungsinya:** Godot melacak script lewat UID ini, bukan lewat path. Jadi saat
-  file dipindah atau di-rename, semua referensi (di `.tscn`, `.tres`, `preload`)
-  tetap nyambung.
-- **Badge "U"** di FileSystem editor = penanda file punya UID.
-- **Aturan:** jangan diedit/dihapus manual, dan **ikut commit ke git**. Kalau
-  dihapus, Godot bikin UID baru → referensi yang memakai UID lama bisa putus.
-
-Hal yang sama berlaku untuk resource: `.tscn` dan `.tres` juga punya `uid="..."`
-di baris header-nya.
+## 1. File `.gd.uid`, `.tscn`, `.tres`
+Godot 4.4+ memberi tiap script `.gd` pendamping `.gd.uid` berisi ID unik
+(`uid://...`). Godot melacak file lewat UID ini, bukan path — jadi rename/pindah
+tidak memutus referensi. **Jangan diedit/dihapus manual; ikut commit ke git.**
+`.tscn` & `.tres` juga punya `uid=` di header.
 
 ---
 
-## 2. Konsep arsitektur: *Scene Composition* + *Coordinator*
+## 2. Autoload (singleton global)
+Terdaftar di `project.godot [autoload]`:
 
-Game ini **bukan** satu scene raksasa. Polanya:
+| Autoload | File | Guna |
+|---|---|---|
+| `Dialogic` | addon | render dialog (VN box) |
+| `SceneManager` | [scene_manager.gd](scripts/systems/scene_manager.gd) | transisi scene (fade) + tumpukan overlay |
+| `GameState` | [game_state.gd](scripts/systems/game_state.gd) | state machine mode game (TITLE/DIALOG/CRAFTING/…) |
+| `SaveManager` | [save_manager.gd](scripts/systems/save_manager.gd) | save/load **progres** (`user://busa_save.json`) |
+| `SettingsManager` | [settings_manager.gd](scripts/systems/settings_manager.gd) | **pengaturan** volume, persist + apply ke AudioServer |
+| `AudioManager` | scene [audio_manager.tscn](scenes/systems/audio_manager.tscn) + [.gd](scripts/systems/audio_manager.gd) | pintu semua audio: BGM (bus "BGM") + SFX pool (bus "SFX") |
 
-- **Satu scene koordinator** ([level1.tscn](scenes/chapters/level1.tscn) +
-  [level1.gd](scripts/systems/level1.gd)) yang **meng-instance** beberapa
-  **panel** sebagai anak.
-- **Tiap fase = satu panel sub-scene** yang berdiri sendiri (punya `.tscn` +
-  `.gd` sendiri), bisa dijalankan terpisah (F6) dan di-reskin terpisah.
-- Koordinator hanya mengatur **state machine** + **kapan panel meluncur** (slide).
-  Isi tiap panel diurus panel-nya sendiri.
-- **LAYOUT panel dibuat di EDITOR**, bukan digenerate kode. Kotak/tombol/judul =
-  node di `.tscn` (bisa digeser & diedit visual). Script panel = **logika saja**
-  (sambung tombol, animasi, dll). Pengecualian: **rak 6 bahan** di MixingPanel
-  diisi kode ke `GridContainer` (pola standar "daftar dari data").
+- **SceneManager:** `change_to(path, fade)` = fade-out → ganti scene → fade-in
+  (CanvasLayer internal + ColorRect). `push_overlay/pop_overlay` = UI di atas scene
+  tanpa menghancurkannya (mis. Pengaturan). Sinyal `scene_changed`.
+- **SaveManager vs SettingsManager:** sengaja **terpisah** — progres game ≠ config
+  pemain (praktik profesional). Save = JSON; Settings = ConfigFile.
+- **AudioManager** adalah autoload **SCENE** (bukan sekadar script) supaya slot
+  `AudioStream` (BGM/SFX) bisa **diisi lewat Inspector di editor**. `play_bgm(key)`
+  = crossfade antar lagu (per scene); `play_sfx(key)` = ambil 1 player idle dari
+  pool. Slot kosong = no-op (aman). Volume ikut bus (SettingsManager).
+
+---
+
+## 3. Alur scene (satu game penuh)
+```
+main_menu ──Mulai──> intro ──> level1 ──(DONE)──> ending ──> credits ──> main_menu
+             └Lanjutkan──────> level1 (dari save)
+```
+Semua transisi lewat `SceneManager.change_to(...)`. **intro, ending, credits**
+memakai **AnimationPlayer** untuk sinematik/scroll (lihat §8).
+
+---
+
+## 4. level1 — koordinator gameplay
+[level1.tscn](scenes/chapters/level1.tscn) + [level1.gd](scripts/systems/level1.gd).
+Satu scene yang meng-instance komponen (rak, ulekan, gayung, jendela) sebagai anak.
+**Layout dibuat di editor; script = logika + state machine.**
 
 ```
-Level1 (Control)  ← level1.gd: state machine + orkestrasi transisi
-├── Background              (PlaceholderBox)         latar kamar mandi
-├── MixingPanel             (MixingPanel)            rak bahan + slot + RACIK
-├── ServePanel              (ServePanel)             BUANG / ADUK / SAJIKAN
-├── CustomerPortraitPanel   (CustomerPortraitPanel)  wajah pelanggan (geser kiri/tengah)
-├── StirCanvas (CanvasLayer, layer 5)
-│   └── StirPanel           (StirPanel)              minigame mengaduk (full-screen)
-└── DebugCanvas (CanvasLayer, layer 10)
-    └── DebugLabel          (Label)                  info state saat dev
+Level1 (Control) ← level1.gd
+├── Background        (PlaceholderBox)   latar meja
+├── RakBahan          (TextureRect)      gambar rak
+├── CustomerWindow    (CustomerWindow)   jendela + customer (clip-mask)
+├── Sabun/Shampo/…    (DraggableItem)    6 bahan, grup "bahan"
+├── Ulekan            (Ulekan)           mangkuk + alat ulek
+├── Gayung            (GayungStation)    gayung di meja (sandwich)
+├── Bubuk             (DraggableItem)    hasil tumbuk (hidden sampai jadi)
+├── PakGuyon          (PlaceholderBox)   pop-up saat Pak Guyon ngomong
+├── Hint (Control)                       banner tutorial (Bg + Text)
+├── StirCanvas (CanvasLayer 5) → StirPanel
+└── DebugCanvas (CanvasLayer 10) → DebugLabel
 ```
 
-> **Dialog dirender oleh addon Dialogic**, bukan node panel sendiri. Saat fase
-> INTRO/CLOSING, `level1.gd` memanggil `Dialogic.start(timeline)` — Dialogic
-> menampilkan kotak dialognya sendiri (CanvasLayer-nya sendiri) dan otomatis
-> menghapusnya saat timeline selesai. Lihat §9.
-
-**Kenapa StirPanel di CanvasLayer terpisah?** Supaya saat minigame aduk muncul,
-ia menutupi *seluruh* layar di atas panel split. (Catatan: kalau `visible`
-CanvasLayer ini tidak sengaja dimatikan di editor, panel aduk tak akan muncul.)
-
----
-
-## 3. State machine (alur fase)
-
-Enum `Phase` di [level1.gd](scripts/systems/level1.gd):
-`INTRO, MIXING, SERVING, STIR, CLOSING, DONE`.
-
+### State machine
+`enum Phase { INTRO, CRAFTING, STIR, CLOSING, DONE }`
 ```mermaid
 flowchart TD
-    INTRO -->|dialog intro habis| MIXING
-    MIXING -->|tekan RACIK| SERVING
-    SERVING -->|BUANG| MIXING
-    SERVING -->|ADUK| STIR
-    SERVING -->|SAJIKAN| CLOSING
-    STIR -->|SAJIKAN| CLOSING
-    CLOSING -->|dialog closing habis| NEXT{masih ada pelanggan?}
+    INTRO -->|dialog intro habis| CRAFTING
+    CRAFTING -->|klik gayung berisi| STIR
+    STIR -->|adukan penuh + Sajikan| CLOSING
+    CLOSING -->|dialog reaksi habis| NEXT{masih ada pelanggan?}
     NEXT -->|ya| INTRO
     NEXT -->|tidak| DONE
+    DONE -->|SceneManager.change_to| ending.tscn
 ```
+- **INTRO:** customer fade-in di jendela + `Dialogic.start(intro)`.
+- **CRAFTING:** drag bahan → ulekan → tumbuk → bubuk → drag ke gayung → klik gayung.
+- **STIR:** slide StirPanel dari atas; putar sendok; Sajikan.
+- **CLOSING:** dialog reaksi (dipilih dari kecocokan resep), lalu pelanggan berikut.
 
-Arah transisi (slide):
-- INTRO → MIXING: dialog keluar ke kiri, **pelanggan meluncur ke kiri**, rak
-  masuk **dari kanan**.
-- MIXING → SERVING: rak keluar ke kiri, panel serve masuk **dari kanan**.
-- SERVING → STIR: panel aduk turun **dari atas**, full-screen.
-- * → CLOSING: panel-panel mundur, pelanggan kembali ke tengah, dialog closing.
-- CLOSING → INTRO (pelanggan berikut): pelanggan lama **fade-out**, pelanggan
-  baru **fade-in** dengan nama/aset berbeda.
+### Pencocokan resep (tanpa skor)
+`_match_tier(pelanggan, racikan)` → **2** = semua bahan resep & tanpa tambahan,
+**1** = ≥1 benar, **0** = 0 benar. Dipakai `_pick_reaction()` untuk memilih
+`react_perfect/partial/wrong`. `racikan` = id bahan yang masuk gayung.
 
 ---
 
-## 4. Hierarki class
+## 5. Class & komponen
 
 ```
 Resource
- ├── IngredientDef        (ingredient_def.gd)   data 1 bahan
- └── CustomerData         (customer_data.gd)    data 1 pelanggan / "level"
+ ├── IngredientDef   (ingredient_def.gd)   data 1 bahan
+ └── CustomerData    (customer_data.gd)    data 1 pelanggan
 
 Control
- ├── PlaceholderBox       (placeholder_box.gd, @tool)   greybox bisa di-skin
- └── CraftPanel           (panel_base.gd)               BASE semua panel
-      ├── CustomerPortraitPanel    (customer_portrait_panel.gd)
-      ├── MixingPanel              (mixing_panel.gd)
-      ├── ServePanel               (serve_panel.gd)
-      └── StirPanel                (stir_panel.gd)
-
-(Dialog ditangani addon Dialogic, bukan class panel — lihat §9.)
-
-Control (langsung)
- └── Level1 koordinator   (level1.gd)           tidak pakai class_name
+ ├── PlaceholderBox  (placeholder_box.gd, @tool)   greybox swappable
+ │    ├── DraggableItem (draggable_item.gd)         kotak bisa di-drag (bahan/bubuk)
+ │    └── Pestle        (pestle.gd)                 alat ulek (drag + emit gerakan)
+ ├── CraftPanel      (panel_base.gd)   base panel geser
+ │    └── StirPanel   (stir_panel.gd)  minigame mengaduk
+ ├── Ulekan          (ulekan.gd)       mangkuk + alat + slot bahan
+ ├── GayungStation   (gayung_station.gd)  gayung di meja (sandwich)
+ ├── CustomerWindow  (customer_window.gd) jendela customer (clip-mask)
+ └── Level1          (level1.gd)       koordinator (tanpa class_name)
 ```
 
----
+### `placeholder_box.gd` — `@tool class_name PlaceholderBox`
+Greybox serbaguna. **Kontrak swap:** isi `texture` → gambar; kosong → kotak warna.
+Export `display_name/texture/box_color`; signal `clicked`; `pop()`/`flash_error()`.
 
-## 5. Rincian tiap file
+### `draggable_item.gd` — `class_name DraggableItem extends PlaceholderBox`
+Kotak bisa di-drag. Export `id` (id bahan). Sinyal `picked_up`/`dropped`. Saat
+dilepas emit `dropped` — **koordinator (level1)** yang memutuskan drop valid atau
+`return_home()`. `drag_enabled` di-gate per fase.
 
-### `ingredient_def.gd` — `class_name IngredientDef extends Resource`
-Data satu bahan. Disimpan sebagai file `.tres` di `resources/ingredients/`.
+### `pestle.gd` — `class_name Pestle extends PlaceholderBox`
+Alat ulek. Di-grab lalu digerakkan; tiap gerak emit `gerus(dy, pusat_global)`
+(`pusat_global` = **posisi kursor**). Dilepas → emit `dilepas` → `return_home()`.
 
-| Export | Tipe | Guna |
-|---|---|---|
-| `id` | String | kode bahan, huruf kecil (mis. "sabun", "shampo") — dipakai di `recipe` |
-| `display_name` | String | nama tampil di rak/slot (mis. "Sabun Batang") |
-| `placeholder_color` | Color | warna greybox |
-| `texture` | Texture2D | gambar bahan (kosong = greybox) |
+### `ulekan.gd` — `class_name Ulekan extends Control`
+Mangkuk + alat. Model **per-slot** (bukan berurutan):
+- `_slot_id[3]` = id bahan tiap slot; `_prog[3]` = progres tumbuk tiap slot.
+- `slot_terdekat(titik)` → slot yang paling dekat titik drop; `isi_slot(i,id,tex)`
+  mengisi slot itu (kalau kosong). Jadi bahan masuk **sesuai tempat drop**.
+- `_on_gerus`: hitung "gerakan" (balik arah + jarak ≥ `SEG_MIN`); hanya slot yang
+  di **kolom X** kursor & terisi yang menyusut (`GERAK_TARGET` tumbukan). Semua slot
+  terisi halus → emit **`selesai_menumbuk(ids)`**.
+- Const: `GERAK_TARGET=5`, `SEG_MIN=45`, `SKALA_HALUS=0.35`, `MARGIN_Y=200`.
+- Teknik **sandwich**: `Mangkuk` (belakang) → `UlekanIsi1/2/3` → `MangkukDepan`.
 
-Id yang dipakai: `sabun, shampo, pasta, bedak, mint, garam`.
+### `gayung_station.gd` — `class_name GayungStation extends Control`
+Gayung di meja (sandwich `GayungBelakang→GayungIsi→GayungDepan`). `tambah_bubuk(id,
+tex)` menumpuk bubuk; klik (saat berisi) → emit **`minta_stir`**. `isi_ids()` = id
+untuk dicocokkan ke resep.
 
-### `customer_data.gd` — `class_name CustomerData extends Resource`
-Data satu pelanggan / "level". File `.tres` di `resources/customers/`.
-
-| Export | Guna |
-|---|---|
-| `id`, `display_name` | identitas + nama tampil |
-| `npc_color`, `npc_texture` | warna/gambar portrait |
-| `recipe : PackedStringArray` | bahan ideal (id, maks 3), penentu hasil & reaksi — TIDAK ada skor |
-| `result_perfect / result_partial / result_wrong` | nama busa di layar serve, by tier |
-| `intro_lines : PackedStringArray` | dialog sebelum meracik (beri petunjuk) |
-| `react_perfect / react_partial / react_wrong` | reaksi setelah disajikan, dipilih by jumlah bahan benar |
-| `intro_timeline : DialogicTimeline` | opsional, override intro pakai timeline `.dtl` |
-| `background_color`, `background_texture` | latar opsional (override default) |
-
-Mekanik hasil & reaksi (di `level1.gd`): `_match_tier(pelanggan, racikan)` hitung
-berapa id `recipe` ada di racikan → **2** = semua benar+tanpa bahan lain, **1** = ≥1 benar,
-**0** = 0 benar. Tier yang sama dipakai dua kali:
-- `_result_name()` → nama busa di kotak HASIL RACIKAN (saat tekan RACIK)
-- `_pick_reaction()` → dialog reaksi (saat tekan SAJIKAN)
-
-Murni ganti nama + dialog, **tanpa skor/bintang**.
-
-### `placeholder_box.gd` — `@tool class_name PlaceholderBox extends Control`
-Greybox serbaguna untuk SEMUA visual statis. **Kontrak swap aset:** isi
-`texture` → kotak warna + label diganti gambar; kosong → tetap greybox.
-
-- Export: `display_name`, `texture`, `box_color`
-- Signal: `clicked` (klik kiri)
-- Internal: `_color_rect`, `_texture_rect`, `_label` (dibuat runtime, owner=null)
-- Function: `pop()` (efek valid), `flash_error()` (efek invalid), `_rebuild()`
-
-### `panel_base.gd` — `class_name CraftPanel extends Control`
-**Base class** semua panel fase. Tiap panel full-screen (1920×1080) dan
-meluncur masuk/keluar. Panel **memiliki** tween slide-nya sendiri.
-
-- `enum Dir { LEFT, RIGHT, TOP, BOTTOM }`
-- `const DESIGN_SIZE := Vector2(1920, 1080)`
-- `const PlaceholderBoxScene := preload(".../placeholder_box.tscn")`
-- `_ready()` → set anchor+size, panggil `_build()`
-- `_build()` → **virtual**, di-override tiap subclass untuk mengisi konten
-- `slide_in(dir, dur)` / `slide_out(dir, dur)` → animasi geser
-- `place_off(dir)` / `place_center()` → set posisi tanpa animasi
-- `make_box(text, rect, color, ignore_mouse)` → spawn PlaceholderBox anak
-- `make_title(text, top_left, width)` → label judul di atas frame
-- `apply_texture(box, tex)` → pasang tekstur kalau tidak null (hook swap aset)
-
-### Dialog (Fase 1 / INTRO & CLOSING) — ditangani **addon Dialogic**
-Tidak ada lagi `dialogue_panel.gd`. Teks dialog dirender Dialogic. Yang relevan
-ada di `level1.gd._play_dialogue()` (lihat §9). Wajah pelanggan tetap diurus
-`CustomerPortraitPanel` (terpisah, supaya tidak hilang saat transisi).
-
-### `customer_portrait_panel.gd` — `class_name CustomerPortraitPanel extends CraftPanel`
-Satu portrait pelanggan yang **persisten** (tidak dihancurkan saat ganti fase),
-hanya bergeser/fade.
-
-- `CENTER_POS` (saat ngobrol) ↔ `LEFT_POS` (saat split)
-- `configure(nama, color, tex)` → reskin untuk pelanggan berbeda
-- `move_to_center()` / `move_to_left()` → geser
-- `fade_in()` / `fade_out()` → untuk pergantian pelanggan
-- `set_center_instant()` → snap tanpa animasi
-
-### `mixing_panel.gd` — `class_name MixingPanel extends CraftPanel`
-Fase 2. Rak bahan (data-driven) + 3 slot + tombol ULANGI/RACIK.
-
-- Signal: **`mix_requested(contents: Array)`**
-- `const MAX_SLOTS := 3`
-- Export: `ingredients : Array[IngredientDef]`, `frame_texture`, `slot_texture`
-- `contents : Array[String]` → id bahan yang dipilih
-- Klik bahan → masuk slot (maks 3, ke-4 ditolak `flash_error`)
-- Klik slot terisi → kosongkan
-- `RACIK` (aktif jika ≥1) → emit `mix_requested`
-- `_load_default_ingredients()` → kalau array kosong, load 6 `.tres` default
-- `_refresh_slots()` → slot terisi tampil tekstur bahan (kalau ada)
-
-### `serve_panel.gd` — `class_name ServePanel extends CraftPanel`
-Fase 3. Hasil racikan + 3 pilihan.
-
-- Signal: **`trash_requested`**, **`serve_requested`**, **`stir_requested`**
-- Export: `frame_texture`, `result_texture`
-- Tombol BUANG → `trash_requested`, ADUK → `stir_requested`, SAJIKAN → `serve_requested`
-- `set_result(text)` → ubah label kotak hasil
+### `customer_window.gd` — `class_name CustomerWindow extends Control`
+Teknik **sandwich/clip-mask**: `WindowBack` → `CustomerSprite` → `WindowFrame`.
+`clip_contents = true`. `set_customer(nama,color,tex)` isi sprite dari CustomerData,
+lalu `_tata_sprite()` **skala cover + top-anchor** (kepala di atas, badan bawah
+ke-clip → cuma badan+muka yang tampil). `fade_in/fade_out`.
 
 ### `stir_panel.gd` — `class_name StirPanel extends CraftPanel`
-Fase 4. Minigame aduk **rotary** (full-screen, di CanvasLayer).
+Minigame aduk **rotary**, full-screen. Layer: `Meja/Gayung/Air/Busa1-3/Spoon`;
+`Vessel` = penanda geometri (transparan) → `_center/_radius` sendok diambil darinya.
+- `_gui_input`: tekan + seret melingkar → akumulasi sudut → `stir_count` (0..`MAX_STIR=5`).
+- `_perbarui_busa(frac)`: Busa1/2/3 muncul bertahap (ambang 0.15/0.45/0.75).
+- Tombol **Sajikan `disabled`** sampai `stir_count >= MAX_STIR`. Emit `serve_requested`.
 
-- Signal: **`serve_requested`**
-- `const MAX_STIR := 5`
-- Export: `backdrop_texture`, `vessel_texture` (gayung), `spoon_texture` (sendok)
-- `stir_count`, `_accum_angle` → progres putaran
-- `_gui_input()` → tekan + seret melingkar di dalam gayung; akumulasi sudut
-- 1 putaran penuh (TAU) = 1 aduk; 5 putaran = "rata sempurna"
-- `reset_stir()` → reset hitungan
-
-### `level1.gd` — koordinator (`extends Control`, tanpa `class_name`)
-Otak alur. Memegang state machine + orkestrasi.
-
-- `enum Phase { INTRO, MIXING, SERVING, STIR, CLOSING, DONE }`
-- Export: `customers : Array[CustomerData]` (kosong → `_load_default_customers()`
-  auto-scan SEMUA `.tres` di `res://resources/customers/`, urut nama file)
-- `@onready` refs: `background, mixing_panel, serve_panel, customer_portrait,
-  stir_panel, debug_label`
-- `_ready()` → sambungkan semua signal (termasuk `Dialogic.timeline_ended`),
-  parkir panel off-screen, mulai pelanggan 0
-- `_start_customer(i)` / `_advance_customer()` → siklus pelanggan + fade
-- `_play_dialogue(timeline, lines)` → start dialog via Dialogic (lihat §9)
-- `_racikan_terakhir : Array` → bahan terakhir yang diracik (disimpan saat RACIK)
-- `_match_tier()` / `_result_name()` / `_pick_reaction()` → resep → nama hasil + reaksi
-- Handler: `_on_dialogue_done, _go_to_mixing, _on_mix_requested, _on_trash,
-  _on_stir, _on_serve`
-- Guard tombol aksi berbasis **phase** (bukan `sedang_transisi`) supaya klik
-  tak hilang saat transisi.
+### `panel_base.gd` — `class_name CraftPanel extends Control`
+Base panel geser: `enum Dir`, `slide_in/slide_out/place_off/place_center`, `_build()`
+virtual. (Sekarang praktis cuma dipakai StirPanel.)
 
 ---
 
-## 6. Peta aliran signal (siapa emit → siapa nyambung)
-
-Semua koneksi dibuat di `level1.gd._ready()`:
-
-| Emitter | Signal | Handler di Level1 | Akibat |
+## 6. Aliran signal (disambung di `level1.gd._ready()`)
+| Emitter | Signal | Handler | Akibat |
 |---|---|---|---|
-| **Dialogic** (autoload) | `timeline_ended` | `_on_dialogue_done` | INTRO→MIXING / CLOSING→pelanggan berikut |
-| MixingPanel | `mix_requested` | `_on_mix_requested` | MIXING→SERVING |
-| ServePanel | `trash_requested` | `_on_trash` | SERVING→MIXING |
-| ServePanel | `stir_requested` | `_on_stir` | SERVING→STIR |
-| ServePanel | `serve_requested` | `_on_serve` | SERVING→CLOSING |
-| StirPanel | `serve_requested` | `_on_serve` | STIR→CLOSING |
-
-Di dalam tiap panel, tombol/aksi memanggil signal lewat `Button.pressed`
-(mis. `_add_button` di ServePanel) atau `PlaceholderBox.clicked` (mis. bahan di
-MixingPanel).
+| `Dialogic` | `timeline_ended` | `_on_dialogue_done` | INTRO→CRAFTING / CLOSING→pelanggan berikut |
+| `Dialogic.Text` | `about_to_show_text` | `_on_dialogic_line` | pop-up Pak Guyon muncul saat barisnya |
+| DraggableItem (bahan) | `dropped` | `_on_bahan_dropped` | isi slot ulekan terdekat |
+| Ulekan | `selesai_menumbuk` | `_on_selesai_menumbuk` | munculkan Bubuk (bawa id) |
+| DraggableItem (bubuk) | `dropped` | `_on_bubuk_dropped` | masuk gayung |
+| GayungStation | `minta_stir` | `_on_minta_stir` | CRAFTING→STIR |
+| StirPanel | `serve_requested` | `_on_serve` | STIR→CLOSING (dialog reaksi) |
 
 ---
 
-## 7. Aturan menumpuk (z-order) & input
-
-- Urutan anak di `level1.tscn` = urutan gambar (yang bawah = di atas).
-- `CustomerPortraitPanel` di atas Mixing/Serve tapi **`mouse_filter = IGNORE`**
-  → klik tembus ke panel di bawahnya.
-- `StirCanvas` (CanvasLayer 5) menggambar di atas semua panel base.
-- `DebugCanvas` (CanvasLayer 10) paling atas (label dev selalu kelihatan).
-- Frame greybox besar dibuat **tanpa label tengah** (judul pakai `make_title`
-  di atas) supaya teks tidak nembus ke kontrol di belakangnya.
+## 7. Save, Settings, Tutorial
+- **Save (progres):** `SaveManager` — `save(dict)/load_data()/has_save()/clear()`,
+  JSON dengan default-merge (save lama aman saat ada field baru). Field:
+  `seen_intro, customer_index, has_save, tutorial_done`. ⚠️ Saat menyimpan **selalu
+  merge** (`load_data()` dulu, update, save) supaya field lain tak terhapus.
+- **Settings:** `SettingsManager` — volume per bus (Master/BGM/SFX/Voice) 0..100,
+  disimpan `user://settings.cfg`, diterapkan ke AudioServer saat `_ready`. Bus di
+  [default_bus_layout.tres](default_bus_layout.tres).
+- **Tutorial hint:** level1 menampilkan banner kontekstual per langkah, **sekali
+  seumur save** (flag `tutorial_done`, diset saat pertama klik gayung untuk mengaduk).
+- **Audio (`AudioManager`):** dipanggil dari berbagai tempat sebagai layanan global:
+  - **BGM per scene:** `main_menu`("menu"), `intro`("intro"), `level1`("gameplay"),
+    `ending`("ending") — di `_ready` masing-masing. AudioManager persist antar scene,
+    jadi lagu lanjut sampai `play_bgm` key lain dipanggil.
+  - **SFX per event:** tombol menu (`main_menu`), drag bahan/bubuk (`level1.picked_up`),
+    tumbuk (`ulekan._on_gerus`), bubuk jadi/klik gayung/sajikan (`level1`), aduk
+    (`stir_panel._refresh`), transisi (`scene_manager.change_to`).
 
 ---
 
-## 8. Resolusi & koordinat
+## 8. Pola AnimationPlayer (sinematik & scroll)
+Sequence tetap dibuat di **editor via AnimationPlayer**, bukan tween kode. Script
+cuma `anim.play(...)` + bereaksi. **Call Method track** dipakai untuk trigger
+non-visual; **value track** untuk yang harus terlihat di preview.
 
-- Desain di **1920×1080**, stretch `canvas_items`, aspect `keep`.
-- Semua posisi/rect di kode dalam koordinat desain 1920×1080.
-- Panel di-set full-rect (1920×1080) lalu digeser via `position`.
+| Scene | Klip | Method track |
+|---|---|---|
+| [intro.gd](scripts/systems/intro.gd) | `intro` | `_enter_fantasy`, `_start_dialogue` |
+| [ending.gd](scripts/systems/ending.gd) | `act7`, `act8` | `_mulai_dialog`, `_ke_credits` |
+| [credits.gd](scripts/systems/credits.gd) | `scroll` | `_ke_menu` |
+
+⚠️ Call Method track **tidak dieksekusi saat preview di editor** — hanya runtime.
+Karena itu perpindahan visual (mis. tukar dunia di ending act8) dibuat **value
+track**, bukan method, supaya kelihatan saat preview.
 
 ---
 
-## 9. Integrasi Dialogic (dialog)
-
-Dialog memakai addon **Dialogic 2** (autoload `Dialogic`, sudah di `project.godot`).
-
-**Cara kerja di kode** ([level1.gd](scripts/systems/level1.gd)):
-
+## 9. Integrasi Dialogic
+Addon **Dialogic 2** (autoload). Start dialog:
 ```gdscript
-func _play_dialogue(timeline_res: DialogicTimeline, lines: PackedStringArray):
-    var tl := timeline_res
-    if tl == null:                       # tidak ada timeline → bangun dari teks
-        tl = DialogicTimeline.new()
-        tl.from_text("\n".join(lines))   # tiap baris = 1 text event
-    Dialogic.start(tl)                   # Dialogic tampilkan kotak dialognya
+var tl := DialogicTimeline.new()
+tl.from_text("\n".join(baris))   # tiap baris = 1 text event
+Dialogic.start(tl)               # selesai → sinyal Dialogic.timeline_ended
 ```
-
-- `Dialogic.start()` otomatis memuat **VN style default** bawaan addon (karena
-  `style_directory` kosong) lalu menampilkan kotak dialog di CanvasLayer-nya.
-- Input maju dialog (klik/spasi) sudah disiapkan via action `dialogic_default_action`
-  di `project.godot`.
-- Saat timeline habis, Dialogic **otomatis menghapus** layout-nya (setting
-  `dialogic/layout/end_behaviour=0`) lalu emit **`Dialogic.timeline_ended`**.
-- `level1.gd` menyambung `timeline_ended` → `_on_dialogue_done()` → lanjut fase
-  sesuai `phase` (INTRO→MIXING, atau CLOSING→pelanggan berikut).
-
-**Konten dialog (di CustomerData):**
-- **Intro** (sebelum meracik): isi `intro_lines` (teks) → di-feed ke Dialogic via
-  `from_text`. Cara penuh: buat timeline `.dtl` di editor Dialogic & assign ke
-  `intro_timeline` (override `intro_lines`; dapat nama/portrait/pilihan).
-- **Closing** (reaksi setelah disajikan): pakai `react_perfect/partial/wrong` —
-  dipilih otomatis oleh `_match_tier` (lihat §5), lalu di-feed ke Dialogic juga.
-  (Tidak ada `closing_lines`/`closing_timeline` lagi — diganti sistem reaksi.)
-
-**Catatan:** addon Dialogic 2-Alpha-19 memunculkan **warning UID** ("invalid UID …
-using text path instead") saat run — itu dari file addon-nya sendiri, **tidak
-berbahaya**, dan tidak memengaruhi jalannya game.
+- ⚠️ **JANGAN pakai pola `Nama: teks`** (Dialogic anggap `Nama:` = karakter → crash).
+  Pakai kurung `(Nama ...)`.
+- Konten dialog pelanggan: `intro_lines` (sebelum meracik) & `react_*` (reaksi),
+  di-feed via `from_text`. Opsional: timeline `.dtl` di `intro_timeline`.
+- **Warning "invalid UID … using text path instead"** saat run = dari file addon
+  Dialogic sendiri, **tidak berbahaya**.
+```

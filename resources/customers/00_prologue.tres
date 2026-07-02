@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="CustomerData" format=3 uid="uid://dv8sigwl8fncc"]
+
+[ext_resource type="Script" uid="uid://dxux8k38j6pyu" path="res://scripts/systems/customer_data.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cly3qebywvayr" path="res://assets/sprites/char1.png" id="1_up5fu"]
+
+[resource]
+script = ExtResource("1")
+id = "prologue"
+display_name = "Pak Guyon"
+npc_color = Color(0.5, 0.42, 0.28, 1)
+npc_texture = ExtResource("1_up5fu")
+available_ingredients = PackedStringArray("sabun", "shampo")
+recipe = PackedStringArray("sabun", "shampo")
+result_perfect = "Busa Pertama"
+result_partial = "Busa Belajar"
+result_wrong = "Busa Belajar"
+intro_lines = PackedStringArray("Hei, hei! Jangan bingung dulu. Ini kamar mandimu sendiri, cuma versinya yang lebih jujur.", "Orang datang ke sini bukan karena kotor, tapi karena ada yang belum bersih di dalam sini.", "Tugasmu, racik busa yang pas untuk tiap tamu. Bahan pertamamu sudah ada di rak.", "[color=#C9A84C]Sabun batang[/color] yang kuat fondasinya, dan [color=#C9A84C]shampoo[/color] yang selalu siap berbusa.", "Coba racik keduanya dulu. Mulai dari yang sederhana. Aku yang akan membantumu.")
+react_perfect = PackedStringArray("Nah! Begitu caranya. Kamu cepat belajar.", "Pelanggan pertama sudah di depan pintu. Bersiaplah, ngger.")
+react_partial = PackedStringArray("Lumayan untuk pemula. Coba pakai kedua bahannya ya.")
+react_wrong = PackedStringArray("Hehe, tidak apa-apa. Coba lagi pakai sabun dan shampoo.")

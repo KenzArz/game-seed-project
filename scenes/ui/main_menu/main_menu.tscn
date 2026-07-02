@@ -87,6 +87,19 @@ theme_override_font_sizes/font_size = 32
 text = "Mulai"
 flat = true
 
+[node name="lanjutkan" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=421385224]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+disabled = true
+theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_pressed_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
+theme_override_colors/font_hover_color = Color(0.95686275, 0.78431374, 0.25882354, 1)
+theme_override_fonts/font = SubResource("FontVariation_e8t4i")
+theme_override_font_sizes/font_size = 32
+text = "Lanjutkan"
+flat = true
+
 [node name="pengaturan" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=421385223]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -149,9 +162,37 @@ color = Color(0.14509805, 0.20784314, 0.3137255, 1)
 polygon = PackedVector2Array(-4, 477, 49, 519, 100, 553, 163, 582, 224, 606, 292, 626, 369, 649, -4, 649)
 uv = PackedVector2Array(-1, 479, 49, 519, 101, 555, 161, 579, 235, 593, 292, 626, 366, 646, -1, 648)
 
+[node name="GayungBubble" type="Control" parent="menu" unique_id=771201455]
+visible = false
+offset_left = 510.0
+offset_top = 778.0
+offset_right = 1410.0
+offset_bottom = 872.0
+mouse_filter = 2
+
+[node name="Bg" type="ColorRect" parent="menu/GayungBubble"]
+offset_right = 900.0
+offset_bottom = 94.0
+mouse_filter = 2
+color = Color(0.1, 0.09, 0.13, 0.82)
+
+[node name="Text" type="Label" parent="menu/GayungBubble"]
+offset_right = 900.0
+offset_bottom = 94.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.7, 1)
+theme_override_fonts/font = SubResource("FontVariation_e8t4i")
+theme_override_font_sizes/font_size = 28
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
 [node name="pengaturan" parent="." unique_id=1784675409 instance=ExtResource("5_r70wa")]
 visible = false
 
 [connection signal="pressed" from="menu/PanelContainer/VBoxContainer/mulai" to="." method="_on_mulai_pressed"]
+[connection signal="pressed" from="menu/PanelContainer/VBoxContainer/lanjutkan" to="." method="_on_lanjutkan_pressed"]
 [connection signal="pressed" from="menu/PanelContainer/VBoxContainer/pengaturan" to="." method="_on_pengaturan_pressed"]
+[connection signal="pressed" from="menu/PanelContainer/VBoxContainer/kredit" to="." method="_on_kredit_pressed"]
 [connection signal="pressed" from="menu/PanelContainer/VBoxContainer/keluar" to="." method="_on_keluar_pressed"]

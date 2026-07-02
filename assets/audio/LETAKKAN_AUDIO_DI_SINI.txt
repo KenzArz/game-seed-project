@@ -1,0 +1,7 @@
+Taruh file audio di sini:
+  assets/audio/bgm/   -> musik latar (.ogg, aktifkan Loop di Import)
+  assets/audio/sfx/   -> efek suara (.wav)
+
+Setelah file ada, buka scenes/systems/audio_manager.tscn -> pilih node
+"AudioManager" -> Inspector -> drop file ke slot BGM/SFX yang sesuai.
+Tidak perlu ubah kode. Lihat README.md bagian "Cara masukin audio".

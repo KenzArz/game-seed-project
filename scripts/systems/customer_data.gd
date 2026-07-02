@@ -16,6 +16,10 @@ extends Resource
 @export var npc_texture: Texture2D                      ## gambar OPSIONAL; null = greybox
 
 @export_group("Recipe")
+## Bahan yang TERSEDIA di rak saat pelanggan ini (sistem unlock cerita).
+## Mis. ["sabun","shampo"] = baru 2 bahan terbuka. Kosong = semua bahan tampil.
+@export var available_ingredients: PackedStringArray = PackedStringArray()
+
 ## Id bahan ideal untuk pelanggan ini (maks 3), mis. ["sabun","shampo","mint"].
 ## Penentu reaksi mana yang main — TIDAK ditampilkan ke player & TIDAK diberi skor.
 @export var recipe: PackedStringArray = PackedStringArray()

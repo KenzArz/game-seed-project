@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://bdire7vr1uky3"]
+[gd_scene format=3 uid="uid://b5mvq30hscmxf"]
 
-[ext_resource type="Script" uid="uid://bjtaw8bkxmgoo" path="res://scripts/systems/serve_panel.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/systems/serve_panel.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/placeholder_box.tscn" id="2"]
 
 [node name="ServePanel" type="Control" unique_id=1299936515]
