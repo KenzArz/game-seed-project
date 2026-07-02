@@ -23,6 +23,10 @@ func _ready() -> void:
 
 
 func return_home() -> void:
+	# Kalau dipanggil selagi masih di-drag (mis. selesai menumbuk otomatis saat
+	# tombol mouse masih ditekan), lepaskan kunci cursor supaya tidak nyangkut grab.
+	if _drag and not Engine.is_editor_hint():
+		CursorManager.end_drag()
 	_drag = false
 	z_index = 0
 	var t := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
