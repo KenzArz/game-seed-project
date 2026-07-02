@@ -49,6 +49,7 @@ var _bahan_items: Array = []            # semua DraggableItem bahan (grup "bahan
 var _tex_bahan := {}                    # id -> texture bahan (buat visual isi)
 var _bubuk_ids: Array = []              # id bahan yang terkandung di bubuk hasil ulek
 var _tutorial := false                  # true = playthrough pertama, tampilkan hint
+var _gayung_hoverable := false          # hover gayung baru aktif setelah serbuk masuk
 
 
 func _ready() -> void:
@@ -136,6 +137,7 @@ func _reset_station() -> void:
 	gayung.kosong()
 	bubuk.visible = false
 	_bubuk_ids.clear()
+	_gayung_hoverable = false  # reset: gayung belum berisi serbuk
 	for item: DraggableItem in _bahan_items:
 		item.return_home()
 
@@ -220,6 +222,7 @@ func _on_bubuk_dropped(item: DraggableItem) -> void:
 			gayung.tambah_bubuk(id, item.texture)
 		_bubuk_ids.clear()
 		item.visible = false  # bubuk habis dipakai
+		_gayung_hoverable = true  # serbuk masuk -> gayung sekarang bisa di-hover/klik
 		_show_hint(HINT_KLIK)  # bubuk masuk gayung -> ajari klik untuk mengaduk
 	else:
 		item.return_home()
@@ -230,6 +233,8 @@ func _on_minta_stir() -> void:
 	if phase != Phase.CRAFTING or sedang_transisi:
 		return
 	AudioManager.play_sfx("gayung")
+	_gayung_hoverable = false  # sudah masuk stir; matikan hover gayung
+	CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)
 	_selesai_tutorial()  # sampai sini = pemain sudah paham; matikan hint selamanya
 	sedang_transisi = true
 	phase = Phase.STIR
@@ -432,15 +437,32 @@ func _wire_cursor_hover() -> void:
 	if alat and alat is Control:
 		CursorManager.connect_hover(alat)
 
-	# Wire gayung.
-	if gayung and gayung is Control:
-		CursorManager.connect_hover(gayung)
+	# Wire bubuk/serbuk hasil tumbuk — biar ada hover juga (nandain bisa di-drag).
+	if bubuk and bubuk is Control:
+		CursorManager.connect_hover(bubuk)
 
-	# Wire suhu toggle.
-	var suhu_toggle = $SuhuToggle
-	if suhu_toggle and suhu_toggle is Control:
-		CursorManager.connect_hover(suhu_toggle)
+	# Gayung: hover DI-GATE lewat _gayung_hoverable — baru aktif setelah serbuk
+	# masuk gayung (hint bahwa gayung bisa diklik untuk mengaduk).
+	if gayung and gayung is Control:
+		gayung.mouse_entered.connect(_on_gayung_hover_enter)
+		gayung.mouse_exited.connect(_on_gayung_hover_exit)
+
+	# Wire suhu toggle: pasang di tombolnya (Btn), bukan container, biar hover kena.
+	var suhu_btn := $SuhuToggle.get_node_or_null("Btn")
+	if suhu_btn and suhu_btn is Control:
+		CursorManager.connect_hover(suhu_btn)
 
 	# Wire customer window (if clickable).
 	if customer_window and customer_window is Control:
 		CursorManager.connect_hover(customer_window)
+
+
+# Gayung hover hanya berlaku saat serbuk sudah ada di gayung (siap diaduk).
+func _on_gayung_hover_enter() -> void:
+	if _gayung_hoverable:
+		CursorManager.set_cursor(CursorManager.Cursor.HOVER)
+
+
+func _on_gayung_hover_exit() -> void:
+	if _gayung_hoverable:
+		CursorManager.set_cursor(CursorManager.Cursor.DEFAULT)
