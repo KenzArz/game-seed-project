@@ -119,7 +119,7 @@ func _on_gerus(dy: float, pusat_global: Vector2) -> void:
 			_arah = arah
 			_seg = absf(dy)
 	if ada_gerakan:
-		AudioManager.play_sfx("tumbuk")
+		AudioManager.play_sfx("tumbuk", false)
 	var mr := _mangkuk.get_global_rect() if _mangkuk != null else Rect2()
 	for i in range(_slots.size()):
 		if _slot_id[i] == "" or _prog[i] >= GERAK_TARGET:

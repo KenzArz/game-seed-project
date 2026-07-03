@@ -9,10 +9,10 @@ id = "mystery_child"
 display_name = "Mystery Child"
 npc_color = Color(0.5, 0.45, 0.6, 1)
 available_ingredients = PackedStringArray("sabun", "shampo", "pasta", "bedak", "mint", "garam")
-recipe = PackedStringArray("bedak", "mint", "garam")
-result_perfect = "Morning Breeze"
+recipe = PackedStringArray()
+result_perfect = "Busa Sempurna"
 result_partial = "Busa Jujur"
 result_wrong = "Busa Apa Adanya"
 timeline = ExtResource("2")
-hint_text = "[color=#C9A84C]Tebal[/color], [color=#C9A84C]banyak gelembung[/color], [color=#C9A84C]dingin tajam[/color], [color=#C9A84C]hangat lembut[/color], [color=#C9A84C]segar[/color]."
+hint_crafting_text = "...apapun yang kamu pilih, itu benar."
 background_color = Color(0.15, 0.14, 0.18, 1)

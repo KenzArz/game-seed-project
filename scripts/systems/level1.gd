@@ -13,9 +13,11 @@
 ## Layout dibuat di EDITOR (level1.tscn + sub-scene). Script = logika saja.
 extends Control
 
-enum Phase { INTRO, CRAFTING, STIR, CLOSING, DONE }
+enum Phase { INTRO, CRAFTING, STIR, CLOSING, FADEOUT, INTERSCENE, DONE }
 
 const DUR := 0.35
+const FOOTSTEP_DELAY := 1.2   # detik jeda antara suara langkah dan fade in karakter
+const FOOTSTEP_FADE := 0.5    # durasi fade in setelah langkah kaki
 
 # Instruksi tutorial (suara Pak Guyon), muncul kontekstual & HANYA sekali (playthrough
 # pertama; disimpan lewat flag "tutorial_done" di save).
@@ -124,15 +126,16 @@ func _start_customer(index: int) -> void:
 	var pelanggan := customers[index]
 	customer_window.set_customer(pelanggan.display_name, pelanggan.npc_color, pelanggan.npc_texture)
 	customer_window.set_hidden_instant()
-	customer_window.fade_in(DUR)
 	_apply_background(pelanggan)
 	_set_bahan_tersedia(pelanggan.available_ingredients)
 	_reset_station()
 	_set_craft_enabled(false)
-	# Sembunyikan hint bubble dari pelanggan sebelumnya
 	if hint_bubble:
 		hint_bubble.hide_hint()
 	phase = Phase.INTRO
+	# Suara langkah kaki dulu, baru karakter fade in, baru dialog mulai
+	customer_window.enter_with_footsteps(FOOTSTEP_DELAY, FOOTSTEP_FADE)
+	await get_tree().create_timer(FOOTSTEP_DELAY + FOOTSTEP_FADE).timeout
 	_play_dialogue(pelanggan.timeline, "intro")
 
 
@@ -164,18 +167,13 @@ func _set_craft_enabled(on: bool) -> void:
 # Setelah dialog closing: fade-out customer, datangkan pelanggan berikutnya.
 func _advance_customer() -> void:
 	sedang_transisi = true
-	customer_window.fade_out(DUR)
-	await get_tree().create_timer(DUR).timeout
-
 	_customer_index += 1
 	if _customer_index >= customers.size():
-		SaveManager.clear()  # tamat
+		SaveManager.clear()
 		_show_end()
 		sedang_transisi = false
 		return
 
-	# Merge ke save yang ada (JANGAN nimpa) supaya field lain seperti tutorial_done
-	# tidak ikut terhapus.
 	var d := SaveManager.load_data()
 	d["has_save"] = true
 	d["seen_intro"] = true
@@ -204,7 +202,7 @@ func _on_bahan_dropped(item: DraggableItem) -> void:
 
 # Item (bahan/bubuk) diangkat -> kunci cursor ke mode grab bahan.
 func _on_item_diangkat(_item: DraggableItem) -> void:
-	AudioManager.play_sfx("drag")
+	AudioManager.play_sfx("drag", false)
 	CursorManager.begin_drag(CursorManager.Cursor.DRAG_BAHAN)
 
 
@@ -285,15 +283,36 @@ func _on_dialogue_done() -> void:
 		return
 	match phase:
 		Phase.INTRO:
-			phase = Phase.CRAFTING
-			_set_craft_enabled(true)
-			_show_hint(HINT_RAK)
-			# Tampilkan hint bubble customer kalau ada teksnya
-			var pelanggan := customers[_customer_index]
-			if hint_bubble and not pelanggan.hint_text.is_empty():
-				hint_bubble.show_hint(pelanggan.hint_text)
+			# Dialog intro selesai → tampilkan hint bubble, lalu buka crafting
+			_buka_crafting()
 		Phase.CLOSING:
+			# React dialog customer selesai → fade out customer dulu
+			phase = Phase.FADEOUT
+			customer_window.exit_with_footsteps(DUR)
+			await get_tree().create_timer(DUR + 0.5).timeout
+			# Baru mainkan interscene Pak Guyon
+			var pelanggan := customers[_customer_index]
+			_play_interscene(pelanggan.timeline)
+		Phase.INTERSCENE:
 			_advance_customer()
+
+
+func _buka_crafting() -> void:
+	phase = Phase.CRAFTING
+	_set_craft_enabled(true)
+	_show_hint(HINT_RAK)
+	# Tampilkan hint bubble di bawah customer — teks percakapan singkat customer
+	var pelanggan := customers[_customer_index]
+	if hint_bubble and not pelanggan.hint_crafting_text.is_empty():
+		hint_bubble.show_hint(pelanggan.hint_crafting_text)
+
+
+func _play_interscene(timeline_res: DialogicTimeline) -> void:
+	if timeline_res == null:
+		_advance_customer()
+		return
+	phase = Phase.INTERSCENE
+	_play_dialogue(timeline_res, "interscene")
 
 
 # Pop-up Pak Guyon muncul HANYA saat baris dialog miliknya.
@@ -365,15 +384,23 @@ func _apply_background(pelanggan: CustomerData) -> void:
 # --- Pencocokan resep (dipertahankan) ----------------------------------------
 
 ## 2 = pas (semua bahan resep & tanpa tambahan), 1 = sebagian, 0 = salah.
+## Khusus Mystery Child (recipe kosong): semua kombinasi return 2 — tidak ada jawaban salah.
 func _match_tier(pelanggan: CustomerData, racikan: Array) -> int:
+	# Recipe kosong = semua kombinasi valid (Mystery Child — self acceptance)
+	# Tapi tetap harus ada minimal 1 bahan diracik
+	if pelanggan.recipe.is_empty():
+		return 2 if racikan.size() > 0 else 1
 	var benar := 0
 	for id_bahan in pelanggan.recipe:
 		if racikan.has(id_bahan):
 			benar += 1
-	if pelanggan.recipe.is_empty() or (benar == pelanggan.recipe.size() and racikan.size() == pelanggan.recipe.size()):
+	# Perfect: semua bahan resep ada (bahan ekstra tidak dihukum)
+	if benar == pelanggan.recipe.size():
 		return 2
+	# Partial: minimal 1 bahan resep benar
 	elif benar >= 1:
 		return 1
+	# Wrong: tidak ada bahan resep yang benar
 	return 0
 
 # --- Layar selesai -----------------------------------------------------------
@@ -392,7 +419,8 @@ func _build_end_label() -> void:
 func _show_end() -> void:
 	phase = Phase.DONE
 	_set_craft_enabled(false)
-	# Antrean habis -> lanjut ke ending sinematik (ACT 7-9).
+	# Semua customer selesai → pindah ke ending scene.
+	# Closing monolog Pak Guyon dimainkan di ending.gd via closing.dtl.
 	SceneManager.change_to("res://scenes/chapters/ending.tscn")
 
 
@@ -419,10 +447,6 @@ func _fallback_customer() -> CustomerData:
 	var pelanggan := CustomerData.new()
 	pelanggan.id = "default"
 	pelanggan.display_name = "Tamu"
-	pelanggan.intro_lines = PackedStringArray(["Halo! Coba racik sesuatu buat aku ya."])
-	pelanggan.react_perfect = PackedStringArray(["Terima kasih!"])
-	pelanggan.react_partial = PackedStringArray(["Terima kasih!"])
-	pelanggan.react_wrong = PackedStringArray(["Terima kasih!"])
 	return pelanggan
 
 

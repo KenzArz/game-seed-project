@@ -36,9 +36,10 @@ extends Resource
 ## Di dalam file .dtl pakai label "intro", "react_perfect", "react_partial", "react_wrong".
 @export var timeline: DialogicTimeline
 
-## Teks hint yang melayang di bawah customer selama phase crafting.
-## Bisa pakai BBCode untuk warnai kata kunci, mis. [color=#C9A84C]sabun[/color].
-@export_multiline var hint_text: String = ""
+## Teks hint dialog Pak Guyon yang muncul saat phase crafting dimulai.
+## Format: dialog singkat Pak Guyon yang menyindir bahan tanpa menyebut langsung.
+## Pakai BBCode untuk warnai kata kunci penting.
+@export_multiline var hint_crafting_text: String = ""
 
 @export_group("Scene")
 @export var background_color: Color = Color(0.16, 0.15, 0.2)

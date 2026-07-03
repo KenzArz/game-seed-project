@@ -63,6 +63,24 @@ func fade_out(dur := 0.4) -> void:
 	_tween_alpha(0.0, dur)
 
 
+## Customer masuk: suara langkah kaki dulu, lalu fade in karakter.
+## Kembalikan total durasi animasi lewat sinyal atau return nilai.
+func enter_with_footsteps(delay := 1.2, fade_dur := 0.5) -> void:
+	if _sprite:
+		_sprite.modulate.a = 0.0
+	AudioManager.play_sfx("foot_steps")
+	var t := create_tween()
+	t.tween_interval(delay)
+	t.tween_property(_sprite, "modulate:a", 1.0, fade_dur)
+
+
+## Customer keluar: fade out karakter, lalu suara langkah kaki customer berikutnya.
+func exit_with_footsteps(fade_dur := 0.3) -> void:
+	var t := create_tween()
+	t.tween_property(_sprite, "modulate:a", 0.0, fade_dur)
+	t.tween_callback(func() -> void: AudioManager.play_sfx("foot_steps"))
+
+
 func _tween_alpha(target_a: float, dur: float) -> void:
 	if _sprite == null:
 		return

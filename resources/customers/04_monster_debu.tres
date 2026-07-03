@@ -8,11 +8,11 @@ script = ExtResource("1")
 id = "monster_debu"
 display_name = "Monster Debu"
 npc_color = Color(0.5, 0.5, 0.45, 1)
-available_ingredients = PackedStringArray("sabun", "shampo", "pasta", "bedak", "mint", "garam")
-recipe = PackedStringArray("sabun", "shampo", "garam")
+available_ingredients = PackedStringArray("sabun", "shampo", "pasta", "bedak", "mint")
+recipe = PackedStringArray("sabun", "mint")
 result_perfect = "Ocean Cloud"
 result_partial = "Busa Setengah Jadi"
 result_wrong = "Debu Berbusa"
 timeline = ExtResource("2")
-hint_text = "[color=#C9A84C]Kuat[/color], [color=#C9A84C]membersihkan dalam[/color], [color=#C9A84C]efek ombak[/color]. Bukan yang dingin!"
+hint_crafting_text = "Jangan yang dingin! Yang kuat! Yang kayak ombak besar ngulung!"
 background_color = Color(0.15, 0.15, 0.14, 1)

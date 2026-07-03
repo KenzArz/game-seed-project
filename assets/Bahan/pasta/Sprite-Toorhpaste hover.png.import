@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vadu5am0trqu"
-path="res://.godot/imported/index.apple-touch-icon.png-d1c4eb6d5d7c30b40e86e977a0ef11a4.ctex"
+uid="uid://0cxqi0fiwmfl"
+path="res://.godot/imported/Sprite-Toorhpaste hover.png-2699ef377cd0c11da9402d95df64df74.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://dist/index.apple-touch-icon.png"
-dest_files=["res://.godot/imported/index.apple-touch-icon.png-d1c4eb6d5d7c30b40e86e977a0ef11a4.ctex"]
+source_file="res://assets/Bahan/pasta/Sprite-Toorhpaste hover.png"
+dest_files=["res://.godot/imported/Sprite-Toorhpaste hover.png-2699ef377cd0c11da9402d95df64df74.ctex"]
 
 [params]
 

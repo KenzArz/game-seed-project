@@ -1,21 +1,28 @@
-label intro
-"pegawai kantoran": Maaf kalau aku tidak banyak bicara. Aku sudah lelah bicara seharian.
-"pegawai kantoran": Yang aku mau simple. Aku mau merasa seperti [color=#C9A84C]dipeluk[/color]. [color=#C9A84C]Hangat[/color]. [color=#C9A84C]Lembut banget[/color].
-"pegawai kantoran": Kalau bisa yang ada [color=#C9A84C]aroma nyaman[/color]-nya. Bukan yang terlalu keras.
-"pak guyon": Dia butuh yang lembut dan menenangkan. Kamu tahu kan bahan paling lembut yang ada sekarang?
+﻿label intro
+"pegawai kantoran": Maaf kalau aku tidak banyak bicara. Aku sudah... lelah bicara seharian.
+"pegawai kantoran": Yang aku mau itu simple. Aku mau merasa seperti [color=#C9A84C]dipeluk[/color]. [color=#C9A84C]Hangat[/color]. [color=#C9A84C]Lembut banget[/color]. Kayak waktu Mama mandiin aku pas sakit waktu kecil.
+"pegawai kantoran": Kalau bisa... yang ada [color=#C9A84C]aroma yang nyaman[/color]nya. Bukan yang terlalu keras. Yang bisa bikin aku lupa sebentar kalau besok ada deadline lagi.
+"pak guyon": Dia butuh yang lembut dan menenangkan. Kamu tahu kan apa yang paling [color=#C9A84C]lembut[/color] di antara semua bahan yang ada sekarang?
 [end_timeline]
 
 label react_perfect
-"pegawai kantoran": Hngg... lembut sekali. Bahuku terasa ringan.
-"pegawai kantoran": Dulu aku suka main daun-daun rontok di ember saat mandi. Aroma hijaunya bikin dunia terasa lebih aman...
+"pegawai kantoran": Dulu aku suka mandi sambil mainan [color=#C9A84C]daun daun yang rontok[/color] dari pohon di halaman. Ditaruh di ember, ngambang gitu. Aroma hijaunya... bikin dunia terasa lebih kecil. Lebih aman.
+"pak guyon": ...gua kayak kenal orang itu, ngger. Baju kerjanya. Capeknya.
 [end_timeline]
 
 label react_partial
 "pegawai kantoran": Lumayan... tapi masih kurang menenangkan.
-"pegawai kantoran": Tambahkan yang lembut ya, biar capeknya hilang.
+"pegawai kantoran": Yang [color=#C9A84C]lembut[/color] ya. Yang bikin capeknya hilang.
+"pak guyon": Lo dulu juga gitu. Simpen semua. Sampai berat banget dibawa.
 [end_timeline]
 
 label react_wrong
-"pegawai kantoran": Aduh, ini malah bikin badanku makin tegang.
-"pegawai kantoran": Aku butuh yang lembut dan hangat, bukan ini.
+"pegawai kantoran": ...ini malah bikin makin tegang.
+"pegawai kantoran": Aku butuh yang [color=#C9A84C]lembut[/color] dan [color=#C9A84C]hangat[/color]. Bukan ini.
+"pak guyon": Lo dulu juga gitu. Kalau makin dipaksa, makin resah.
+[end_timeline]
+
+label interscene
+"pak guyon": Yang capek itu biasanya cuma butuh istirahat, ngger. Bukan solusi.
+"pak guyon": Tadi dia nyebut daun daun rontok. Aroma hijau. Coba lihat rak sekarang.
 [end_timeline]

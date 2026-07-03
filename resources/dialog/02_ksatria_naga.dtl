@@ -1,21 +1,30 @@
-label intro
-"ksatria naga": Aku tidak pernah meminta bantuan siapa pun. Tapi hari ini... aku butuh keahlianmu.
-"ksatria naga": Besok ujian terbesar hidupku. Busamu harus memberi rasa [color=#C9A84C]dingin dan tajam[/color], seperti pedang baru diasah.
-"ksatria naga": Yang [color=#C9A84C]menusuk hidung[/color] sedikit tapi tetap [color=#C9A84C]menyegarkan[/color]. Biar aku hadir dengan [color=#C9A84C]kepala tegak[/color].
-"pak guyon": Dingin tajam, menusuk, menyegarkan... persis bahan baru yang muncul di rakmu. Sudah coba?
+﻿label intro
+"ksatria naga": Aku tidak pernah meminta bantuan siapapun. Tapi hari ini... kondisinya membutuhkan keahlianmu.
+"ksatria naga": Besok aku menghadapi ujian terbesar dalam hidupku. Aku harus hadir dengan [color=#C9A84C]kepala tegak[/color]. Busa yang kau buat harus memberi rasa [color=#C9A84C]dingin dan tajam[/color]. Seperti pedang yang baru diasah.
+"ksatria naga": Aku tidak butuh yang lembut. Aku butuh yang [color=#C9A84C]menusuk hidung[/color] sedikit, tapi tetap [color=#C9A84C]menyegarkan[/color]. Seperti angin gunung sebelum perang.
+"pak guyon": Hmm. Dingin tajam, menusuk, menyegarkan... persis seperti bahan baru yang baru saja muncul di rakmu. Sudah coba?
 [end_timeline]
 
 label react_perfect
-"ksatria naga": ...Luar biasa. Aku merasa berani lagi.
-"ksatria naga": Dulu Ibu menaburiku bedak bayi sebelum tidur. Aromanya membuatku merasa terlindungi... tapi itu rahasia ya.
+"ksatria naga": ...Luar biasa.
+"ksatria naga": Waktu kecil, aku selalu takut gelap. Ibu selalu menaburi [color=#C9A84C]bedak bayi[/color] setelah mandi sebelum tidur. Aromanya... membuatku merasa seperti ada yang melindungi.
+"ksatria naga": Tapi itu rahasia. Kamu tidak mendengar apapun.
+"pak guyon": Anak itu percaya sama dirinya. Sepenuhnya. Tanpa syarat. Lo dulu juga gitu.
 [end_timeline]
 
 label react_partial
-"ksatria naga": Ada segarnya... tapi kurang menusuk.
-"ksatria naga": Tambahkan yang dingin tajam, biar nyaliku benar-benar bangkit.
+"ksatria naga": Ada segarnya... tapi belum cukup tajam untuk seorang ksatria.
+"ksatria naga": Aku butuh yang lebih menusuk. Seperti angin gunung.
+"pak guyon": Anak itu percaya sama dirinya. Lo dulu juga begitu sebelum dunia bilang jangan.
 [end_timeline]
 
 label react_wrong
-"ksatria naga": Ini tidak membangkitkan keberanianku sama sekali.
-"ksatria naga": Aku butuh yang dingin dan tajam, peracik muda.
+"ksatria naga": Ini... ini bukan ramuan ksatria.
+"ksatria naga": Aku butuh yang dingin tajam. Bukan ini.
+"pak guyon": Anak itu masih percaya. Walaupun helmnya melorot. Hahaha.
+[end_timeline]
+
+label interscene
+"pak guyon": Lo kira itu armor mainan. Tapi buat dia itu armor beneran, ngger.
+"pak guyon": Tadi dia nyebut bedak bayi. Gua rasa itu bukan kebetulan. Ada yang baru di rak sekarang.
 [end_timeline]

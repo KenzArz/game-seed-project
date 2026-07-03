@@ -76,5 +76,6 @@ func _on_dialogue_done() -> void:
 	_sudah_lanjut = true
 	var data := SaveManager.load_data()
 	data["seen_intro"] = true
+	AudioManager.stop_bgm()
 	SaveManager.save(data)
 	SceneManager.change_to("res://scenes/chapters/level1.tscn")

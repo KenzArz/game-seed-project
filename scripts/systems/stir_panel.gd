@@ -91,7 +91,7 @@ func _refresh() -> void:
 	var new_count: int = mini(MAX_STIR, int(floor(rotations)))
 	if new_count > stir_count:
 		stir_count = new_count
-		AudioManager.play_sfx("aduk")
+		AudioManager.play_sfx("aduk", false)
 	_perbarui_busa(frac)  # busa muncul dikit-dikit seiring adukan
 	if _progress_fill and _progress_bg:
 		_progress_fill.size = Vector2(_progress_bg.size.x * frac, _progress_fill.size.y)

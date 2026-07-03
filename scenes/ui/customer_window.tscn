@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://lk7huojlg81g"]
 
-[ext_resource type="Script" uid="uid://bfo1locicqrtr" path="res://scripts/systems/customer_window.gd" id="1"]
+[ext_resource type="Script" uid="uid://bih40guol0tu6" path="res://scripts/systems/customer_window.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/placeholder_box.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://8d4oo6mpgc42" path="res://assets/backgrounds/windowbg.png" id="3_fnxqv"]
 

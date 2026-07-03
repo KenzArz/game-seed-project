@@ -14,5 +14,5 @@ result_perfect = "Comfort Cloud"
 result_partial = "Busa Setengah Jadi"
 result_wrong = "Busa Kasar"
 timeline = ExtResource("2")
-hint_text = "[color=#C9A84C]Lembut[/color], [color=#C9A84C]hangat[/color], [color=#C9A84C]aroma nyaman[/color]."
+hint_crafting_text = "...yang hangat. Yang kayak dipeluk. Lembut. Jangan yang keras."
 background_color = Color(0.14, 0.15, 0.18, 1)

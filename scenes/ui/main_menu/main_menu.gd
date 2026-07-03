@@ -29,6 +29,7 @@ func _ready():
 
 func _on_mulai_pressed():
 	AudioManager.play_sfx("button")
+	AudioManager.stop_bgm()
 	# Game baru: reset save, lalu mainkan intro (transisi fade via SceneManager).
 	SaveManager.clear()
 	SceneManager.change_to("res://scenes/chapters/intro.tscn")

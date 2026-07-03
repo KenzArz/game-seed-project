@@ -1,18 +1,20 @@
-[gd_resource type="Resource" script_class="CustomerData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="CustomerData" format=3 uid="uid://be470qn1l8ama"]
 
-[ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
-[ext_resource type="Resource" path="res://resources/dialog/02_ksatria_naga.dtl" id="2"]
+[ext_resource type="Script" uid="uid://jwrj1nvsqtjg" path="res://scripts/systems/customer_data.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://djudoir2gw3ov" path="res://assets/sprites/character/ksatria_naga.png" id="2"]
+[ext_resource type="Resource" uid="uid://ufy0o0brgfl8" path="res://resources/dialog/02_ksatria_naga.dtl" id="3"]
 
 [resource]
 script = ExtResource("1")
 id = "ksatria_naga"
 display_name = "Ksatria Naga"
 npc_color = Color(0.6, 0.3, 0.3, 1)
+npc_texture = ExtResource("2")
 available_ingredients = PackedStringArray("sabun", "shampo", "pasta")
 recipe = PackedStringArray("sabun", "pasta")
 result_perfect = "Mint Crystal"
 result_partial = "Busa Hangat"
 result_wrong = "Busa Lemas"
-timeline = ExtResource("2")
-hint_text = "[color=#C9A84C]Dingin[/color], [color=#C9A84C]tajam[/color], [color=#C9A84C]menyegarkan[/color]."
+timeline = ExtResource("3")
+hint_crafting_text = "Aku butuh yang bikin dada lapang dan napas segar! Yang seperti pedang diasah!"
 background_color = Color(0.16, 0.13, 0.14, 1)

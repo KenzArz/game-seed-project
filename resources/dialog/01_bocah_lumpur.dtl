@@ -1,20 +1,29 @@
-label intro
-"bocah lumpur": Kak! Kak! Aku abis main di sungai, liat lumpurnya sebanyak ini!
-"bocah lumpur": Ibu bilang aku harus bersih sebelum makan. Busanya harus [color=#C9A84C]banyak gelembungnya[/color] biar lumpurnya keangkat!
-"bocah lumpur": Aku mau yang [color=#C9A84C]cepet hilang busanya[/color] juga, biar bisa balik main lagi!
-"pak guyon": Banyak gelembung, cepat hilang... bahan apa yang paling suka bikin ribut di permukaan air?
+﻿label intro
+"bocah lumpur": Kak! Kak! Aku abis main di sungai! Liat lumpurnya sebanyak ini!
+"bocah lumpur": Ibu bilang aku harus bersih sebelum makan malem. Katanya busanya harus [color=#C9A84C]banyak gelembungnya[/color] biar semua lumpurnya keangkat!
+"bocah lumpur": Aku mau yang [color=#C9A84C]cepet hilang busanya[/color] juga ya, biar aku bisa balik main lagi!
+"bocah lumpur": Tapi jangan bilang Ibu ya!
+"pak guyon": Banyak gelembung, cepat hilang... kamu tahu bahan apa yang paling suka bikin ribut di permukaan air?
 [end_timeline]
 
 label react_perfect
-"bocah lumpur": Enak banget! Busanya banyak gelembungnya!
-"bocah lumpur": Oh iya Kak, tadi aku ngunyah daun mint, nafasku jadi sejuk banget! Kayak es dari dalem!
+"bocah lumpur": AHHHH enak banget! Gelembungnya banyaaak! Makasih Kak!
+"bocah lumpur": Oh iya Kak! Tadi aku gosok gigi pake pasta baru, terus mulutku jadi dingin banget seharian. Kayak ada angin masuk dari dalem!
+"pak guyon": Anak itu... lo dulu juga gitu, ngger. Takut dimarahin tapi tetep nyemplung.
 [end_timeline]
 
 label react_partial
 "bocah lumpur": Hmm, gelembungnya kurang banyak nih Kak...
-"bocah lumpur": Coba tambah yang suka bikin busa rame ya!
+"bocah lumpur": Coba yang suka bikin busa rame ya!
+"pak guyon": Anak itu... lo dulu juga gitu. Takut, tapi tetep jalan.
 [end_timeline]
 
 label react_wrong
-"bocah lumpur": Lho kok nggak ada gelembungnya? Aku kan mau yang rame busanya, Kak.
+"bocah lumpur": Lho kok nggak ada gelembungnya? Aku kan mau yang rame busanya, Kak!
+"pak guyon": Anak itu... lo dulu juga gitu, ngger. Takut, tapi tetep jalan.
+[end_timeline]
+
+label interscene
+"pak guyon": Kalau ada sumur di ladang... ah, pikun lagi. Hahaha.
+"pak guyon": Tapi serius. Anak itu tadi nyebut pasta dan dingin sebelum pergi. Lo denger tadi? Ada yang baru di rak sekarang.
 [end_timeline]

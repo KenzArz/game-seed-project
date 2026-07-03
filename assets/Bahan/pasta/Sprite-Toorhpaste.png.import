@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cly3qebywvayr"
-path="res://.godot/imported/char1.png-81cbfbdf729986862d4abe8b064ee6c7.ctex"
+uid="uid://dupa53xaxhatj"
+path="res://.godot/imported/Sprite-Toorhpaste.png-4a059714c6be62cb6b9d60e4a7088602.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/char1.png"
-dest_files=["res://.godot/imported/char1.png-81cbfbdf729986862d4abe8b064ee6c7.ctex"]
+source_file="res://assets/Bahan/pasta/Sprite-Toorhpaste.png"
+dest_files=["res://.godot/imported/Sprite-Toorhpaste.png-4a059714c6be62cb6b9d60e4a7088602.ctex"]
 
 [params]
 

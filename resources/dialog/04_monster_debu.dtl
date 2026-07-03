@@ -1,22 +1,32 @@
-label intro
+﻿label intro
 "monster debu": JANGAN PANIK. Aku cuma mau bersih.
-"monster debu": Aku sudah lama tidak benar-benar bersih. Debu ini menempel terlalu lama.
-"monster debu": Aku butuh yang [color=#C9A84C]kuat[/color], yang bisa [color=#C9A84C]membersihkan sampai dalam[/color]. Bukan cuma di permukaan.
-"monster debu": Tapi [color=#C9A84C]bukan yang dingin[/color], aku sudah cukup kedinginan. Kasih yang ada [color=#C9A84C]efek ombak[/color]-nya!
-"pak guyon": Membersihkan sampai dalam, efek ombak... Ada bahan baru yang rasanya seperti laut. Lihat rak.
+"monster debu": Aku sudah lama... tidak pernah benar-benar bersih. Debu ini sudah menempel terlalu lama.
+"monster debu": Aku butuh yang [color=#C9A84C]kuat[/color]. Yang bisa [color=#C9A84C]membersihkan sampai dalam[/color]. Bukan yang cuma di permukaan doang.
+"monster debu": Tapi jangan yang [color=#C9A84C]terlalu menusuk[/color]. Kasih yang ada [color=#C9A84C]efek ombaknya[/color]. Yang terasa menggulung dan menyapu semuanya sekaligus.
+"pak guyon": Membersihkan sampai dalam, efek ombak tapi bukan yang menusuk... hmm. Ada bahan yang baunya kayak angin laut tapi hangat. Lihat rak.
 [end_timeline]
 
 label react_perfect
-"monster debu": ...Ombaknya menyapu semua debuku. Terima kasih.
-"monster debu": Waktu kecil aku suka garam laut. Seperti laut tahu cara membersihkan sesuatu yang jauh lebih besar dari dirinya.
+"monster debu": ...Terima kasih.
+"monster debu": Waktu aku masih kecil, aku suka garam dari laut. Bukan buat masak. Cuma suka perasaannya. Seperti laut tahu caranya membersihkan sesuatu yang jauh lebih besar dari dirinya.
+"monster debu": Kamu bisa simpan itu buat yang berikutnya.
+"pak guyon": Lo dulu juga gitu, ngger. Kalo ada yang bikin kesel, disimpen. Sampai jadi monster.
 [end_timeline]
 
 label react_partial
-"monster debu": Grr, sebagian debu masih nempel!
-"monster debu": Butuh yang lebih kuat membersihkan... garam jangan lupa!
+"monster debu": GRR... sebagian debunya masih nempel!
+"monster debu": Butuh yang lebih [color=#C9A84C]kuat[/color] lagi. Yang kayak ombak besar!
+"pak guyon": Yang disimpen lama itu makin berat, ngger.
 [end_timeline]
 
 label react_wrong
 "monster debu": GROAAR! Debuku malah nggak hilang!
-"monster debu": Aku mau yang KUAT bersih-bersihnya! Garam!
+"monster debu": Aku mau yang KUAT! Yang kayak [color=#C9A84C]ombak[/color]!
+"pak guyon": Kalau makin dipaksa diam, makin meledak. Yang lembut itu lebih kuat dari yang keras.
+[end_timeline]
+
+label interscene
+"pak guyon": Tadi dia nyebut garam laut waktu pergi. Sepertinya dia ninggalin sesuatu...
+"pak guyon": Lo lihat rak? Ada yang baru. Garam mandi. Buat yang berikutnya.
+"pak guyon": ...dan bentar lagi ada satu yang dateng. Yang ini beda, ngger. Gua tau dari langkahnya.
 [end_timeline]

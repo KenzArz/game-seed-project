@@ -1,22 +1,45 @@
-label intro
+﻿label intro
 "mystery child": ...Kamu tidak ingat aku?
-"mystery child": Aku mau semuanya. Bukan karena aku kotor. Tapi aku ingin tahu rasanya kalau semua bagian diriku benar-benar bersih.
-"mystery child": Yang [color=#C9A84C]tebal[/color] tapi [color=#C9A84C]banyak gelembung[/color]. Yang [color=#C9A84C]dingin tajam[/color] tapi [color=#C9A84C]hangat lembut[/color]. Yang [color=#C9A84C]segar[/color] tapi [color=#C9A84C]membersihkan dalam[/color].
+"mystery child": Aku mau semuanya. Bukan karena aku kotor. Tapi karena aku ingin tahu... rasanya kalau semua bagian dari diri sendiri itu benar-benar bersih.
+"mystery child": Yang [color=#C9A84C]tebal busanya[/color] tapi juga [color=#C9A84C]banyak gelembungnya[/color]. Yang [color=#C9A84C]dingin tajam[/color] tapi juga terasa [color=#C9A84C]hangat dan lembut[/color]. Yang [color=#C9A84C]segar[/color] tapi juga [color=#C9A84C]membersihkan sampai dalam[/color].
 "mystery child": Kamu bisa, kan?
-"pak guyon": Ini yang paling sulit. Bukan karena bahannya, tapi karena kamu harus jujur mau meracik apa. Tidak ada salah di sini.
+"pak guyon": ...Ini yang paling sulit. Bukan karena bahannya susah. Tapi karena kamu harus jujur tentang mau meracik apa. Tidak ada salah di sini.
 [end_timeline]
 
 label react_perfect
-"mystery child": ...ini hangat sekali. Untuk pertama kalinya aku merasa cukup, apa adanya.
-"mystery child": Terima kasih sudah kembali. Aku menunggumu lama sekali.
+"mystery child": ...itu aku.
+"mystery child": Yang kecil itu... itu aku juga.
+"mystery child": ...kamu lupa sama dia ya.
+"pak guyon": ...
+"mystery child": Om...
+"pak guyon": Ya?
+"mystery child": Besok boleh main lagi?
+"pak guyon": Boleh. Kapanpun lo mau.
+"mystery child": Terima kasih sudah kembali.
+"mystery child": Aku sudah menunggumu lama sekali.
 [end_timeline]
 
 label react_partial
-"mystery child": ...nggak sempurna ya. Tapi nggak apa-apa.
-"mystery child": Justru karena nggak sempurna, ini terasa jujur. Terima kasih sudah kembali.
+"mystery child": ...ini juga bagus.
+"mystery child": Nggak sempurna. Tapi jujur.
+"pak guyon": ...
+"mystery child": Om...
+"pak guyon": Ya?
+"mystery child": Besok boleh main lagi?
+"pak guyon": Boleh. Kapanpun lo mau.
+"mystery child": Terima kasih sudah kembali.
+"mystery child": Aku sudah menunggumu lama sekali.
 [end_timeline]
 
 label react_wrong
-"mystery child": ...ini bukan yang orang bilang 'bagus'. Tapi kamu membuatnya untukku.
-"mystery child": Itu saja sudah lebih dari cukup. Terima kasih sudah kembali.
+"mystery child": ...ini juga aku.
+"mystery child": Bukan yang terbaik. Tapi kamu membuatnya untukku.
+"mystery child": Itu saja sudah lebih dari cukup.
+"pak guyon": ...
+"mystery child": Om...
+"pak guyon": Ya?
+"mystery child": Besok boleh main lagi?
+"pak guyon": Boleh. Kapanpun lo mau.
+"mystery child": Terima kasih sudah kembali.
+"mystery child": Aku sudah menunggumu lama sekali.
 [end_timeline]

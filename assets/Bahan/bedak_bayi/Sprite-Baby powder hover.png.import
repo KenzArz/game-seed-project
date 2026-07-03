@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dp482boikey8l"
-path="res://.godot/imported/index.icon.png-ebf4ad58b4a2cee8f808e86473c0799b.ctex"
+uid="uid://75to71tv0udv"
+path="res://.godot/imported/Sprite-Baby powder hover.png-e409f74536b1b20d3cde4c35b1ecdebf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://dist/index.icon.png"
-dest_files=["res://.godot/imported/index.icon.png-ebf4ad58b4a2cee8f808e86473c0799b.ctex"]
+source_file="res://assets/Bahan/bedak_bayi/Sprite-Baby powder hover.png"
+dest_files=["res://.godot/imported/Sprite-Baby powder hover.png-e409f74536b1b20d3cde4c35b1ecdebf.ctex"]
 
 [params]
 

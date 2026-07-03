@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfh5pa30nclwu"
-path="res://.godot/imported/index.png-7f66f612a88a5e604ffeac6d4ccded38.ctex"
+uid="uid://bh3txtqvmxu35"
+path="res://.godot/imported/bocah_lumpur.png-471f1db4e16c860a56bbbe9007c20db7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://dist/index.png"
-dest_files=["res://.godot/imported/index.png-7f66f612a88a5e604ffeac6d4ccded38.ctex"]
+source_file="res://assets/sprites/character/bocah_lumpur.png"
+dest_files=["res://.godot/imported/bocah_lumpur.png-471f1db4e16c860a56bbbe9007c20db7.ctex"]
 
 [params]
 

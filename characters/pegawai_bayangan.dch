@@ -1,0 +1,21 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(0.55, 0.6, 0.75, 1),
+&"custom_info": {
+"prefix": "",
+"sound_mood_default": "",
+"sound_moods": {},
+"style": "",
+"suffix": ""
+},
+&"default_portrait": "",
+&"description": "Bayangan protagonis dewasa. Cermin dirinya sekarang — capek, tapi masih bisa senyum.",
+&"display_name": "Pegawai Bayangan",
+&"mirror": false,
+&"nicknames": [""],
+&"offset": Vector2(0, 0),
+&"portraits": {},
+&"scale": 1.0
+}

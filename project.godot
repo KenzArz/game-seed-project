@@ -33,15 +33,16 @@ directories/dch_directory={
 "monster debu": "res://characters/monster_debu.dch",
 "mystery child": "res://characters/mystery_child.dch",
 "pak guyon": "res://characters/pak_guyon.dch",
-"pegawai kantoran": "res://characters/pegawai_kantoran.dch"
+"pegawai kantoran": "res://characters/pegawai_kantoran.dch",
+"pegawai_bayangan": "res://characters/pegawai_bayangan.dch"
 }
 directories/dtl_directory={
-"00_prologue": "res://resources/dialog/00_prologue.dtl",
 "01_bocah_lumpur": "res://resources/dialog/01_bocah_lumpur.dtl",
 "02_ksatria_naga": "res://resources/dialog/02_ksatria_naga.dtl",
 "03_pegawai_kantoran": "res://resources/dialog/03_pegawai_kantoran.dtl",
 "04_monster_debu": "res://resources/dialog/04_monster_debu.dtl",
 "05_mystery_child": "res://resources/dialog/05_mystery_child.dtl",
+"closing": "res://resources/dialog/closing.dtl",
 "intro_scene": "res://resources/dialog/intro_scene.dtl"
 }
 layout/style_directory={
@@ -94,6 +95,10 @@ window/size/viewport_height=1080
 window/size/window_width_override=1080
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
+
+[dotnet]
+
+project/assembly_name="gameseed-project"
 
 [editor_plugins]
 
