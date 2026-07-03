@@ -1,8 +1,6 @@
 [gd_scene format=3 uid="uid://b4ocayp5xdca"]
 
-[ext_resource type="FontFile" uid="uid://b4eaqs7h2b4i6" path="res://assets/fonts/inter/Inter-Bold.otf" id="1_1ch07"]
 [ext_resource type="Script" uid="uid://q7jdap00eqjh" path="res://scenes/ui/main_menu/main_menu.gd" id="1_52x6y"]
-[ext_resource type="FontFile" uid="uid://dmq3jd6vyt6ws" path="res://assets/fonts/inter/Inter-Regular.otf" id="2_e8t4i"]
 [ext_resource type="Texture2D" uid="uid://qascw4xbtfha" path="res://assets/ui/testing_gayung.png" id="3_cmwxi"]
 [ext_resource type="Texture2D" uid="uid://43hqgow5pu06" path="res://assets/ui/testing_gayung_handle.png" id="4_r70wa"]
 [ext_resource type="PackedScene" uid="uid://c20i5on1dwv38" path="res://scenes/ui/setting/pengaturan.tscn" id="5_r70wa"]
@@ -10,14 +8,12 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e8t4i"]
 
 [sub_resource type="FontVariation" id="FontVariation_qt1dd"]
-base_font = ExtResource("1_1ch07")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cmwxi"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qt1dd"]
 
 [sub_resource type="FontVariation" id="FontVariation_e8t4i"]
-base_font = ExtResource("2_e8t4i")
 
 [node name="Control" type="Control" unique_id=662802568]
 layout_mode = 3
@@ -72,7 +68,7 @@ vertical_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="menu/PanelContainer/VBoxContainer" unique_id=652873623]
 layout_mode = 2
-theme_override_constants/separation = 200
+theme_override_constants/separation = 350
 theme_override_styles/separator = SubResource("StyleBoxEmpty_qt1dd")
 
 [node name="mulai" type="Button" parent="menu/PanelContainer/VBoxContainer" unique_id=864023897]
@@ -91,12 +87,12 @@ flat = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-disabled = true
 theme_override_colors/font_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
 theme_override_colors/font_pressed_color = Color(0.9411765, 0.89411765, 0.78431374, 1)
 theme_override_colors/font_hover_color = Color(0.95686275, 0.78431374, 0.25882354, 1)
 theme_override_fonts/font = SubResource("FontVariation_e8t4i")
 theme_override_font_sizes/font_size = 32
+disabled = true
 text = "Lanjutkan"
 flat = true
 
@@ -139,12 +135,12 @@ text = "Keluar
 flat = true
 
 [node name="PakGuyonGayung" type="Sprite2D" parent="menu/PanelContainer/VBoxContainer" unique_id=914083157]
-position = Vector2(296, 434)
+position = Vector2(358, 451)
 texture = ExtResource("3_cmwxi")
 metadata/_edit_group_ = true
 
 [node name="GayungHandle" type="Sprite2D" parent="menu/PanelContainer/VBoxContainer" unique_id=1761144697]
-position = Vector2(537, 427)
+position = Vector2(599, 444)
 texture = ExtResource("4_r70wa")
 metadata/_edit_group_ = true
 
@@ -164,26 +160,28 @@ uv = PackedVector2Array(-1, 479, 49, 519, 101, 555, 161, 579, 235, 593, 292, 626
 
 [node name="GayungBubble" type="Control" parent="menu" unique_id=771201455]
 visible = false
+layout_mode = 3
+anchors_preset = 0
 offset_left = 510.0
 offset_top = 778.0
 offset_right = 1410.0
 offset_bottom = 872.0
 mouse_filter = 2
 
-[node name="Bg" type="ColorRect" parent="menu/GayungBubble"]
+[node name="Bg" type="ColorRect" parent="menu/GayungBubble" unique_id=1259717009]
+layout_mode = 0
 offset_right = 900.0
 offset_bottom = 94.0
 mouse_filter = 2
 color = Color(0.1, 0.09, 0.13, 0.82)
 
-[node name="Text" type="Label" parent="menu/GayungBubble"]
+[node name="Text" type="Label" parent="menu/GayungBubble" unique_id=2034009984]
+layout_mode = 0
 offset_right = 900.0
 offset_bottom = 94.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.7, 1)
 theme_override_fonts/font = SubResource("FontVariation_e8t4i")
 theme_override_font_sizes/font_size = 28
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2

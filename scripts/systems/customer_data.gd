@@ -5,6 +5,10 @@
 ## Tiap pelanggan punya RESEP target (id bahan). Setelah disajikan, game menghitung
 ## berapa bahan resep yang benar lalu memainkan REAKSI dialog berbeda (perfect /
 ## sebagian / salah). TIDAK ada skor — hanya teks reaksinya yang berubah.
+##
+## Dialog system:
+##   Satu file .dtl per pelanggan, berisi label "intro", "react_perfect",
+##   "react_partial", "react_wrong". Dipanggil via Dialogic.start(tl, "label").
 class_name CustomerData
 extends Resource
 
@@ -17,30 +21,25 @@ extends Resource
 
 @export_group("Recipe")
 ## Bahan yang TERSEDIA di rak saat pelanggan ini (sistem unlock cerita).
-## Mis. ["sabun","shampo"] = baru 2 bahan terbuka. Kosong = semua bahan tampil.
 @export var available_ingredients: PackedStringArray = PackedStringArray()
 
-## Id bahan ideal untuk pelanggan ini (maks 3), mis. ["sabun","shampo","mint"].
-## Penentu reaksi mana yang main — TIDAK ditampilkan ke player & TIDAK diberi skor.
+## Id bahan ideal untuk pelanggan ini (maks 3).
 @export var recipe: PackedStringArray = PackedStringArray()
 
 ## Nama busa hasil yang tampil di layar serve, per tingkat kecocokan.
-@export var result_perfect: String = "Busa Sempurna"  ## semua bahan resep benar
-@export var result_partial: String = "Busa Setengah Jadi"  ## sebagian benar
-@export var result_wrong: String = "Busa Gagal"  ## tidak ada yang benar
+@export var result_perfect: String = "Busa Sempurna"
+@export var result_partial: String = "Busa Setengah Jadi"
+@export var result_wrong: String = "Busa Gagal"
 
 @export_group("Dialogue")
-## Diucapkan SEBELUM meracik (sebaiknya kasih petunjuk apa yang dia mau).
-@export_multiline var intro_lines: PackedStringArray = PackedStringArray()
-## Reaksi SETELAH disajikan, dipilih berdasarkan berapa bahan resep yang benar:
-@export_multiline var react_perfect: PackedStringArray = PackedStringArray()  ## semua bahan resep benar
-@export_multiline var react_partial: PackedStringArray = PackedStringArray()  ## sebagian benar
-@export_multiline var react_wrong: PackedStringArray = PackedStringArray()    ## tidak ada yang benar
+## File .dtl tunggal berisi semua dialog pelanggan ini (intro + semua reaksi).
+## Di dalam file .dtl pakai label "intro", "react_perfect", "react_partial", "react_wrong".
+@export var timeline: DialogicTimeline
 
-## Cara LENGKAP (opsional): timeline Dialogic (.dtl) untuk intro. Kalau diisi, ia
-## MENGGANTIKAN intro_lines (nama, portrait, pilihan semua jalan).
-@export var intro_timeline: DialogicTimeline
+## Teks hint yang melayang di bawah customer selama phase crafting.
+## Bisa pakai BBCode untuk warnai kata kunci, mis. [color=#C9A84C]sabun[/color].
+@export_multiline var hint_text: String = ""
 
 @export_group("Scene")
-@export var background_color: Color = Color(0.16, 0.15, 0.2)  ## warna greybox
-@export var background_texture: Texture2D                      ## gambar OPSIONAL; null = greybox
+@export var background_color: Color = Color(0.16, 0.15, 0.2)
+@export var background_texture: Texture2D

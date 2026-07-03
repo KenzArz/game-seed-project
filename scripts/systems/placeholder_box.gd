@@ -20,6 +20,10 @@ signal clicked
 	set(value):
 		texture = value
 		_rebuild()
+@export var texture_hover: Texture2D:
+	set(value):
+		texture_hover = value
+		_rebuild()
 @export var box_color: Color = Color(0.3, 0.3, 0.35):
 	set(value):
 		box_color = value
@@ -30,29 +34,49 @@ signal clicked
 var _color_rect: ColorRect
 var _texture_rect: TextureRect
 var _label: Label
+var _is_hovering := false
 
 
 func _ready() -> void:
 	_ensure_nodes()
 	_rebuild()
+	_ensure_nodes()
+	_rebuild()
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 
+func _on_mouse_entered() -> void:
+	_is_hovering = true
+	_rebuild()
+
+func _on_mouse_exited() -> void:
+	_is_hovering = false
+	_rebuild()
 
 # Pastikan ketiga node visual ada (dibuat sekali).
 func _ensure_nodes() -> void:
+	_color_rect = get_node_or_null("_ColorRect")
 	if _color_rect == null:
 		_color_rect = ColorRect.new()
+		_color_rect.name = "_ColorRect"
 		_color_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(_color_rect)
+
+	_texture_rect = get_node_or_null("_TextureRect")
 	if _texture_rect == null:
 		_texture_rect = TextureRect.new()
+		_texture_rect.name = "_TextureRect"
 		_texture_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		_texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		_texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(_texture_rect)
+
+	_label = get_node_or_null("_Label")
 	if _label == null:
 		_label = Label.new()
+		_label.name = "_Label"
 		_label.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -65,8 +89,9 @@ func _ensure_nodes() -> void:
 # Atur tampilan: kalau ada texture → tampilkan gambar; kalau tidak → kotak warna + nama.
 func _rebuild() -> void:
 	_ensure_nodes()
-	var has_tex := texture != null
-	_texture_rect.texture = texture
+	var current_tex: Texture2D = texture_hover if (_is_hovering and texture_hover) else texture
+	var has_tex := current_tex != null
+	_texture_rect.texture = current_tex
 	_texture_rect.visible = has_tex
 	_color_rect.visible = not has_tex
 	_color_rect.color = box_color

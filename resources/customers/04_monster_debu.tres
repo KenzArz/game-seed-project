@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="CustomerData" format=3]
+[gd_resource type="Resource" script_class="CustomerData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/dialog/04_monster_debu.dtl" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -12,8 +13,6 @@ recipe = PackedStringArray("sabun", "shampo", "garam")
 result_perfect = "Ocean Cloud"
 result_partial = "Busa Setengah Jadi"
 result_wrong = "Debu Berbusa"
-intro_lines = PackedStringArray("JANGAN PANIK. Aku cuma mau bersih.", "Aku sudah lama tidak benar-benar bersih. Debu ini menempel terlalu lama.", "Aku butuh yang [color=#C9A84C]kuat[/color], yang bisa [color=#C9A84C]membersihkan sampai dalam[/color]. Bukan cuma di permukaan.", "Tapi [color=#C9A84C]bukan yang dingin[/color], aku sudah cukup kedinginan. Kasih yang ada [color=#C9A84C]efek ombak[/color]-nya!", "(Pak Guyon serius) Membersihkan sampai dalam, efek ombak... Ada bahan baru yang rasanya seperti laut. Lihat rak.")
-react_perfect = PackedStringArray("...Ombaknya menyapu semua debuku. Terima kasih.", "Waktu kecil aku suka garam laut. Seperti laut tahu cara membersihkan sesuatu yang jauh lebih besar dari dirinya.")
-react_partial = PackedStringArray("Grr, sebagian debu masih nempel!", "Butuh yang lebih kuat membersihkan... garam jangan lupa!")
-react_wrong = PackedStringArray("GROAAR! Debuku malah nggak hilang!", "Aku mau yang KUAT bersih-bersihnya! Garam!")
+timeline = ExtResource("2")
+hint_text = "[color=#C9A84C]Kuat[/color], [color=#C9A84C]membersihkan dalam[/color], [color=#C9A84C]efek ombak[/color]. Bukan yang dingin!"
 background_color = Color(0.15, 0.15, 0.14, 1)

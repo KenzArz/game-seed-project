@@ -12,8 +12,8 @@
 ##     _start_dialogue() di akhir klip (mulai dialog Pak Guyon)
 ##   Saat dialog selesai: tandai save + pindah ke level1.
 ##
-## Aturan: Protagonis tidak pernah bicara. Pak Guyon playful. Dialog TIDAK boleh
-## pakai pola "Nama: teks" (Dialogic bisa crash); pakai kurung "(Pak Guyon ...)".
+## Dialog diambil dari res://resources/dialog/intro_scene.dtl (Dialogic timeline).
+## Protagonis tidak pernah bicara. Semua dialog milik Pak Guyon.
 extends Control
 
 const OPENING_FOCUS := Vector2(1320, 540) # pusat zoom BG pembuka: Y tengah (lurus), X ke kanan
@@ -28,20 +28,6 @@ const OPENING_FOCUS := Vector2(1320, 540) # pusat zoom BG pembuka: Y tengah (lur
 @onready var fade_overlay: ColorRect = $FadeOverlay
 
 var _sudah_lanjut := false
-
-# Dialog ACT 1 (semua Pak Guyon, protagonis diam). Kata clue tutorial diwarnai emas.
-var INTRO_LINES := PackedStringArray([
-	"Aduh! Lo terjun ya? Hampir gua jatoh dari tangan lo!",
-	"...lho. Lo balik juga, akhirnya.",
-	"Duduk dulu, ngger. Jangan kepleset lagi. Hahaha.",
-	"Astaga. Lo udah jadi bapak-bapak ya sekarang. Padahal terakhir gua liat lo masih mandi pake busa di kepala kayak mahkota.",
-	"Lo masih inget gua, kan?",
-	"...gak inget juga gapapa. Maklum, gua plastik tua. PVC zaman Pak Harto. Tapi gua dulu PREMIUM, lho. Rp 7.500. Mahal.",
-	"Pisang emas dibawa berlayar... ah, lupa lagi.",
-	"Yo wis. Sekarang gua bantuin lo sebentar. Ada beberapa temen yang mau mampir mandi. Lo bantuin gua, gua bantuin lo. Mau?",
-	"Mantep. Tuh, di rak ada [color=#C9A84C]bahan-bahan[/color]. Ambil aja yang lo mau. [color=#C9A84C]Tumbuk, tuang lewat gua, aduk[/color]. Itu aja.",
-	"Kalo bingung, coba aja. Gak ada salah di sini. Customer pertama bentar lagi nih.",
-])
 
 
 func _ready() -> void:
@@ -77,8 +63,10 @@ func _enter_fantasy() -> void:
 
 ## Method track: dipanggil di akhir klip. Mulai dialog Pak Guyon lewat Dialogic.
 func _start_dialogue() -> void:
-	var tl := DialogicTimeline.new()
-	tl.from_text("\n".join(INTRO_LINES))
+	var tl: DialogicTimeline = load("res://resources/dialog/intro_scene.dtl")
+	if tl == null:
+		tl = DialogicTimeline.new()
+		tl.from_text("\"Pak Guyon\": ...")
 	Dialogic.start(tl)
 
 

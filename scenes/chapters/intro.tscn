@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b3j1pbl4xv8ch"]
 
 [ext_resource type="PackedScene" path="res://scenes/ui/placeholder_box.tscn" id="1"]
-[ext_resource type="Script" uid="uid://dgeloj0fqe7i2" path="res://scripts/systems/intro.gd" id="2"]
+[ext_resource type="Script" uid="uid://d1ulo4w0kp2et" path="res://scripts/systems/intro.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://cwtioxoujnq5f" path="res://assets/backgrounds/Normal Varian.png" id="3_bblgi"]
 [ext_resource type="Texture2D" uid="uid://cc03bf0nkcuvw" path="res://assets/backgrounds/Hopeful Varian.png" id="4_gssw5"]
 [ext_resource type="Texture2D" uid="uid://d20252u4wso6x" path="res://assets/backgrounds/Background3_Shade.png" id="4_iirip"]
@@ -234,7 +234,6 @@ offset_right = 0.0
 offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.1017667, 1.1017667)
 display_name = "BG Pembuka"
 texture = ExtResource("4_iirip")
 box_color = Color(0.1, 0.12, 0.16, 1)
@@ -263,7 +262,6 @@ box_color = Color(0.75, 0.6, 0.2, 1)
 
 [node name="FadeOverlay" type="ColorRect" parent="." unique_id=1570184035]
 visible = false
-modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

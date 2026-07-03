@@ -1,0 +1,20 @@
+label intro
+"bocah lumpur": Kak! Kak! Aku abis main di sungai, liat lumpurnya sebanyak ini!
+"bocah lumpur": Ibu bilang aku harus bersih sebelum makan. Busanya harus [color=#C9A84C]banyak gelembungnya[/color] biar lumpurnya keangkat!
+"bocah lumpur": Aku mau yang [color=#C9A84C]cepet hilang busanya[/color] juga, biar bisa balik main lagi!
+"pak guyon": Banyak gelembung, cepat hilang... bahan apa yang paling suka bikin ribut di permukaan air?
+[end_timeline]
+
+label react_perfect
+"bocah lumpur": Enak banget! Busanya banyak gelembungnya!
+"bocah lumpur": Oh iya Kak, tadi aku ngunyah daun mint, nafasku jadi sejuk banget! Kayak es dari dalem!
+[end_timeline]
+
+label react_partial
+"bocah lumpur": Hmm, gelembungnya kurang banyak nih Kak...
+"bocah lumpur": Coba tambah yang suka bikin busa rame ya!
+[end_timeline]
+
+label react_wrong
+"bocah lumpur": Lho kok nggak ada gelembungnya? Aku kan mau yang rame busanya, Kak.
+[end_timeline]

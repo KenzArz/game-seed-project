@@ -1,0 +1,22 @@
+label intro
+"monster debu": JANGAN PANIK. Aku cuma mau bersih.
+"monster debu": Aku sudah lama tidak benar-benar bersih. Debu ini menempel terlalu lama.
+"monster debu": Aku butuh yang [color=#C9A84C]kuat[/color], yang bisa [color=#C9A84C]membersihkan sampai dalam[/color]. Bukan cuma di permukaan.
+"monster debu": Tapi [color=#C9A84C]bukan yang dingin[/color], aku sudah cukup kedinginan. Kasih yang ada [color=#C9A84C]efek ombak[/color]-nya!
+"pak guyon": Membersihkan sampai dalam, efek ombak... Ada bahan baru yang rasanya seperti laut. Lihat rak.
+[end_timeline]
+
+label react_perfect
+"monster debu": ...Ombaknya menyapu semua debuku. Terima kasih.
+"monster debu": Waktu kecil aku suka garam laut. Seperti laut tahu cara membersihkan sesuatu yang jauh lebih besar dari dirinya.
+[end_timeline]
+
+label react_partial
+"monster debu": Grr, sebagian debu masih nempel!
+"monster debu": Butuh yang lebih kuat membersihkan... garam jangan lupa!
+[end_timeline]
+
+label react_wrong
+"monster debu": GROAAR! Debuku malah nggak hilang!
+"monster debu": Aku mau yang KUAT bersih-bersihnya! Garam!
+[end_timeline]

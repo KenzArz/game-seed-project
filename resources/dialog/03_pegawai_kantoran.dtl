@@ -1,0 +1,21 @@
+label intro
+"pegawai kantoran": Maaf kalau aku tidak banyak bicara. Aku sudah lelah bicara seharian.
+"pegawai kantoran": Yang aku mau simple. Aku mau merasa seperti [color=#C9A84C]dipeluk[/color]. [color=#C9A84C]Hangat[/color]. [color=#C9A84C]Lembut banget[/color].
+"pegawai kantoran": Kalau bisa yang ada [color=#C9A84C]aroma nyaman[/color]-nya. Bukan yang terlalu keras.
+"pak guyon": Dia butuh yang lembut dan menenangkan. Kamu tahu kan bahan paling lembut yang ada sekarang?
+[end_timeline]
+
+label react_perfect
+"pegawai kantoran": Hngg... lembut sekali. Bahuku terasa ringan.
+"pegawai kantoran": Dulu aku suka main daun-daun rontok di ember saat mandi. Aroma hijaunya bikin dunia terasa lebih aman...
+[end_timeline]
+
+label react_partial
+"pegawai kantoran": Lumayan... tapi masih kurang menenangkan.
+"pegawai kantoran": Tambahkan yang lembut ya, biar capeknya hilang.
+[end_timeline]
+
+label react_wrong
+"pegawai kantoran": Aduh, ini malah bikin badanku makin tegang.
+"pegawai kantoran": Aku butuh yang lembut dan hangat, bukan ini.
+[end_timeline]

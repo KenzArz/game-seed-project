@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://busafant_dragitem"]
+[gd_scene format=3 uid="uid://nyk8cxidi7g5"]
 
-[ext_resource type="Script" path="res://scripts/systems/draggable_item.gd" id="1"]
+[ext_resource type="Script" uid="uid://pep2kqvv2r67" path="res://scripts/systems/draggable_item.gd" id="1"]
 
-[node name="DraggableItem" type="Control"]
+[node name="DraggableItem" type="Control" unique_id=1656550245]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 150.0

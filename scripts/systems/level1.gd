@@ -37,6 +37,7 @@ const HINT_KLIK := "Klik gayung buat mengaduk jadi ramuan."
 @onready var debug_label: Label = $DebugCanvas/DebugLabel
 @onready var hint: Control = $Hint
 @onready var hint_label: Label = $Hint/Text
+@onready var hint_bubble: Control = $HintBubble
 
 var phase: int = Phase.INTRO
 var sedang_transisi := false
@@ -125,11 +126,14 @@ func _start_customer(index: int) -> void:
 	customer_window.set_hidden_instant()
 	customer_window.fade_in(DUR)
 	_apply_background(pelanggan)
-	_set_bahan_tersedia(pelanggan.available_ingredients)  # unlock cerita
+	_set_bahan_tersedia(pelanggan.available_ingredients)
 	_reset_station()
-	_set_craft_enabled(false)  # crafting dibuka setelah dialog intro
+	_set_craft_enabled(false)
+	# Sembunyikan hint bubble dari pelanggan sebelumnya
+	if hint_bubble:
+		hint_bubble.hide_hint()
 	phase = Phase.INTRO
-	_play_dialogue(pelanggan.intro_timeline, pelanggan.intro_lines)
+	_play_dialogue(pelanggan.timeline, "intro")
 
 
 func _reset_station() -> void:
@@ -251,6 +255,9 @@ func _on_serve() -> void:
 	if phase != Phase.STIR:
 		return
 	AudioManager.play_sfx("sajikan")
+	# Sembunyikan hint bubble customer
+	if hint_bubble:
+		hint_bubble.hide_hint()
 	sedang_transisi = true
 	phase = Phase.CLOSING
 	stir_panel.slide_out(CraftPanel.Dir.TOP, DUR)
@@ -258,7 +265,11 @@ func _on_serve() -> void:
 	gayung.kosong()
 	sedang_transisi = false
 	var pelanggan := customers[_customer_index]
-	_play_dialogue(null, _pick_reaction(pelanggan, _racikan_terakhir))
+	var label := "react_wrong"
+	match _match_tier(pelanggan, _racikan_terakhir):
+		2: label = "react_perfect"
+		1: label = "react_partial"
+	_play_dialogue(pelanggan.timeline, label)
 
 
 # Apakah pusat `item` berada di dalam rect global `target`.
@@ -275,16 +286,23 @@ func _on_dialogue_done() -> void:
 	match phase:
 		Phase.INTRO:
 			phase = Phase.CRAFTING
-			_set_craft_enabled(true)  # buka meracik
-			_show_hint(HINT_RAK)  # langkah pertama tutorial
+			_set_craft_enabled(true)
+			_show_hint(HINT_RAK)
+			# Tampilkan hint bubble customer kalau ada teksnya
+			var pelanggan := customers[_customer_index]
+			if hint_bubble and not pelanggan.hint_text.is_empty():
+				hint_bubble.show_hint(pelanggan.hint_text)
 		Phase.CLOSING:
 			_advance_customer()
 
 
-# Pop-up Pak Guyon muncul HANYA saat baris dialog miliknya (diawali "(Pak Guyon").
+# Pop-up Pak Guyon muncul HANYA saat baris dialog miliknya.
 func _on_dialogic_line(info: Dictionary) -> void:
-	var teks: String = info.get("text", "")
-	_fade_pak_guyon(1.0 if teks.contains("(Pak Guyon") else 0.0)
+	var character = info.get("character")
+	var is_pak_guyon := false
+	if character != null and character is DialogicCharacter:
+		is_pak_guyon = (character.display_name == "Pak Guyon")
+	_fade_pak_guyon(1.0 if is_pak_guyon else 0.0)
 
 
 func _fade_pak_guyon(target_a: float) -> void:
@@ -325,12 +343,12 @@ func _selesai_tutorial() -> void:
 	SaveManager.save(d)
 
 
-func _play_dialogue(timeline_res: DialogicTimeline, baris: PackedStringArray) -> void:
-	var tl: DialogicTimeline = timeline_res
-	if tl == null:
-		tl = DialogicTimeline.new()
-		tl.from_text("\n".join(baris))
-	Dialogic.start(tl)
+func _play_dialogue(timeline_res: DialogicTimeline, label: String = "") -> void:
+	if timeline_res == null:
+		push_warning("[level1] timeline null untuk pelanggan ke-%d" % _customer_index)
+		_on_dialogue_done()
+		return
+	Dialogic.start(timeline_res, label)
 
 
 func _apply_background(pelanggan: CustomerData) -> void:
@@ -357,18 +375,6 @@ func _match_tier(pelanggan: CustomerData, racikan: Array) -> int:
 	elif benar >= 1:
 		return 1
 	return 0
-
-
-func _pick_reaction(pelanggan: CustomerData, racikan: Array) -> PackedStringArray:
-	var baris: PackedStringArray
-	match _match_tier(pelanggan, racikan):
-		2: baris = pelanggan.react_perfect
-		1: baris = pelanggan.react_partial
-		_: baris = pelanggan.react_wrong
-	if baris.is_empty():
-		baris = PackedStringArray(["..."])
-	return baris
-
 
 # --- Layar selesai -----------------------------------------------------------
 

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="CustomerData" format=3]
+[gd_resource type="Resource" script_class="CustomerData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/systems/customer_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/dialog/02_ksatria_naga.dtl" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -12,8 +13,6 @@ recipe = PackedStringArray("sabun", "pasta")
 result_perfect = "Mint Crystal"
 result_partial = "Busa Hangat"
 result_wrong = "Busa Lemas"
-intro_lines = PackedStringArray("Aku tidak pernah meminta bantuan siapa pun. Tapi hari ini... aku butuh keahlianmu.", "Besok ujian terbesar hidupku. Busamu harus memberi rasa [color=#C9A84C]dingin dan tajam[/color], seperti pedang baru diasah.", "Yang [color=#C9A84C]menusuk hidung[/color] sedikit tapi tetap [color=#C9A84C]menyegarkan[/color]. Biar aku hadir dengan [color=#C9A84C]kepala tegak[/color].", "(Pak Guyon mengedip) Dingin tajam, menusuk, menyegarkan... persis bahan baru yang muncul di rakmu. Sudah coba?")
-react_perfect = PackedStringArray("...Luar biasa. Aku merasa berani lagi.", "Dulu Ibu menaburiku bedak bayi sebelum tidur. Aromanya membuatku merasa terlindungi... tapi itu rahasia ya.")
-react_partial = PackedStringArray("Ada segarnya... tapi kurang menusuk.", "Tambahkan yang dingin tajam, biar nyaliku benar-benar bangkit.")
-react_wrong = PackedStringArray("Ini tidak membangkitkan keberanianku sama sekali.", "Aku butuh yang dingin dan tajam, peracik muda.")
+timeline = ExtResource("2")
+hint_text = "[color=#C9A84C]Dingin[/color], [color=#C9A84C]tajam[/color], [color=#C9A84C]menyegarkan[/color]."
 background_color = Color(0.16, 0.13, 0.14, 1)

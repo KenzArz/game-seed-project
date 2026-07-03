@@ -1,0 +1,21 @@
+label intro
+"ksatria naga": Aku tidak pernah meminta bantuan siapa pun. Tapi hari ini... aku butuh keahlianmu.
+"ksatria naga": Besok ujian terbesar hidupku. Busamu harus memberi rasa [color=#C9A84C]dingin dan tajam[/color], seperti pedang baru diasah.
+"ksatria naga": Yang [color=#C9A84C]menusuk hidung[/color] sedikit tapi tetap [color=#C9A84C]menyegarkan[/color]. Biar aku hadir dengan [color=#C9A84C]kepala tegak[/color].
+"pak guyon": Dingin tajam, menusuk, menyegarkan... persis bahan baru yang muncul di rakmu. Sudah coba?
+[end_timeline]
+
+label react_perfect
+"ksatria naga": ...Luar biasa. Aku merasa berani lagi.
+"ksatria naga": Dulu Ibu menaburiku bedak bayi sebelum tidur. Aromanya membuatku merasa terlindungi... tapi itu rahasia ya.
+[end_timeline]
+
+label react_partial
+"ksatria naga": Ada segarnya... tapi kurang menusuk.
+"ksatria naga": Tambahkan yang dingin tajam, biar nyaliku benar-benar bangkit.
+[end_timeline]
+
+label react_wrong
+"ksatria naga": Ini tidak membangkitkan keberanianku sama sekali.
+"ksatria naga": Aku butuh yang dingin dan tajam, peracik muda.
+[end_timeline]

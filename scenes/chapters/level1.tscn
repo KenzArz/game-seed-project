@@ -1,19 +1,25 @@
 [gd_scene format=3 uid="uid://dw8pm6ky1ngg2"]
 
-[ext_resource type="Script" uid="uid://dxakgk5gjcksa" path="res://scripts/systems/level1.gd" id="1"]
+[ext_resource type="Script" uid="uid://b6qkfilv50jt0" path="res://scripts/systems/level1.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/placeholder_box.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://bbfl6oabnd0ai" path="res://assets/backgrounds/BG0.jpeg" id="3_dnndy"]
 [ext_resource type="Texture2D" uid="uid://chbev82di77vp" path="res://assets/backgrounds/Slots-Sprite.png" id="4_k55n8"]
-[ext_resource type="PackedScene" path="res://scenes/ui/panels/stir_panel.tscn" id="7"]
-[ext_resource type="Texture2D" uid="uid://xcujmw6xyr7x" path="res://assets/Bahan/lifebuoy.png" id="7_dv7x5"]
+[ext_resource type="PackedScene" uid="uid://cu7bfsdiyndo1" path="res://scenes/ui/panels/stir_panel.tscn" id="7"]
+[ext_resource type="Texture2D" uid="uid://b25ffa66xmfqw" path="res://assets/Bahan/sabun/Sprite-Soap.png" id="7_7w583"]
 [ext_resource type="PackedScene" uid="uid://lk7huojlg81g" path="res://scenes/ui/customer_window.tscn" id="8"]
-[ext_resource type="PackedScene" path="res://scenes/ui/draggable_item.tscn" id="9"]
+[ext_resource type="Texture2D" uid="uid://cgy3jj8i2yxkf" path="res://assets/Bahan/sabun/Sprite-Soap Hover.png" id="8_23ylu"]
+[ext_resource type="PackedScene" uid="uid://nyk8cxidi7g5" path="res://scenes/ui/draggable_item.tscn" id="9"]
+[ext_resource type="Texture2D" uid="uid://bcsyv1jc46rn3" path="res://assets/Bahan/mint/Sprite-Mint.png" id="9_00yl0"]
 [ext_resource type="PackedScene" uid="uid://dcxlhicftibgt" path="res://scenes/ui/ulekan.tscn" id="10"]
 [ext_resource type="Texture2D" uid="uid://da3dnwi5sfsic" path="res://assets/backgrounds/GAYUNG.png" id="10_7ms1v"]
+[ext_resource type="Texture2D" uid="uid://culrq4srjwuit" path="res://assets/Bahan/mint/Sprite-Mint hover.png" id="10_al50e"]
 [ext_resource type="Texture2D" uid="uid://bimo24ygbq68p" path="res://assets/backgrounds/Background5_Aduk Bahan_Air Sabun.png" id="10_vq8yw"]
 [ext_resource type="PackedScene" uid="uid://v6umpais8owb" path="res://scenes/ui/gayung_station.tscn" id="11"]
-[ext_resource type="Script" path="res://scripts/ui/suhu_toggle.gd" id="12"]
-[ext_resource type="Texture2D" path="res://assets/cursor + toggle suhu/Sprite-Suhu default.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://gtkpcl2xv50d" path="res://assets/Bahan/garam_mandi/Sprite-Bathing salt.png" id="11_o1cdi"]
+[ext_resource type="Script" uid="uid://dl2uaoc70plna" path="res://scripts/ui/suhu_toggle.gd" id="12"]
+[ext_resource type="Texture2D" uid="uid://44o1flgbv5pw" path="res://assets/Bahan/garam_mandi/Sprite-Bathing salt hover.png" id="12_iu5su"]
+[ext_resource type="PackedScene" uid="uid://hehdkv3d2gax" path="res://scenes/ui/hint_bubble.tscn" id="13"]
+[ext_resource type="Texture2D" uid="uid://y5g67l3kh8i6" path="res://assets/cursor + toggle suhu/Sprite-Suhu default.png" id="15"]
 
 [node name="Level1" type="Control" unique_id=1649604347]
 layout_mode = 3
@@ -35,9 +41,9 @@ texture = ExtResource("3_dnndy")
 [node name="RakBahan" type="TextureRect" parent="." unique_id=1984828290]
 layout_mode = 0
 offset_left = 97.0
-offset_top = -71.0
+offset_top = -11.0
 offset_right = 804.0
-offset_bottom = 379.0
+offset_bottom = 439.0
 mouse_filter = 2
 texture = ExtResource("4_k55n8")
 expand_mode = 1
@@ -45,70 +51,69 @@ expand_mode = 1
 [node name="CustomerWindow" parent="." unique_id=1282098971 instance=ExtResource("8")]
 layout_mode = 0
 offset_left = 1013.0
-offset_top = -13.0
+offset_top = -1.0
 offset_right = 1602.0
 offset_bottom = 721.0
 
 [node name="Sabun" parent="." unique_id=1265374810 groups=["bahan"] instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 205.0
-offset_top = 11.0
-offset_right = 323.0
-offset_bottom = 127.0
+offset_left = 228.0
+offset_top = 67.0
+offset_right = 335.82758
+offset_bottom = 173.0
 id = "sabun"
 display_name = "Sabun Batang"
-texture = ExtResource("7_dv7x5")
-box_color = Color(0.85, 0.85, 0.7, 1)
+texture = ExtResource("7_7w583")
+texture_hover = ExtResource("8_23ylu")
 
 [node name="Shampo" parent="." unique_id=1991184560 groups=["bahan"] instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 349.0
-offset_top = 6.0
-offset_right = 467.0
-offset_bottom = 116.0
+offset_left = 337.0
+offset_top = 48.0
+offset_right = 455.0
+offset_bottom = 158.0
 id = "shampo"
 display_name = "Shampoo"
-box_color = Color(0.6, 0.8, 0.85, 1)
 
 [node name="Pasta" parent="." unique_id=213753946 groups=["bahan"] instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 503.0
-offset_top = 4.0
-offset_right = 628.0
-offset_bottom = 103.0
+offset_left = 526.0
+offset_top = 67.0
+offset_right = 651.0
+offset_bottom = 166.0
 id = "pasta"
 display_name = "Pasta Gigi"
-box_color = Color(0.7, 0.9, 0.75, 1)
 
 [node name="Bedak" parent="." unique_id=2058272188 groups=["bahan"] instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 207.0
-offset_top = 153.0
-offset_right = 325.0
-offset_bottom = 269.0
+offset_left = 239.0
+offset_top = 225.0
+offset_right = 357.0
+offset_bottom = 341.0
 id = "bedak"
 display_name = "Bedak Bayi"
-box_color = Color(0.95, 0.9, 0.92, 1)
 
 [node name="Mint" parent="." unique_id=328001451 groups=["bahan"] instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 366.0
-offset_top = 153.0
-offset_right = 516.0
-offset_bottom = 303.0
+offset_left = 359.0
+offset_top = 237.0
+offset_right = 484.0
+offset_bottom = 362.0
 id = "mint"
 display_name = "Daun Mint"
-box_color = Color(0.55, 0.8, 0.55, 1)
+texture = ExtResource("9_00yl0")
+texture_hover = ExtResource("10_al50e")
 
 [node name="Garam" parent="." unique_id=1921020486 groups=["bahan"] instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 535.0
-offset_top = 159.0
-offset_right = 685.0
-offset_bottom = 309.0
+offset_left = 553.0
+offset_top = 207.0
+offset_right = 703.0
+offset_bottom = 357.0
 id = "garam"
 display_name = "Garam Mandi"
-box_color = Color(0.8, 0.85, 0.9, 1)
+texture = ExtResource("11_o1cdi")
+texture_hover = ExtResource("12_iu5su")
 
 [node name="Ulekan" parent="." unique_id=911917922 instance=ExtResource("10")]
 layout_mode = 0
@@ -126,13 +131,12 @@ offset_bottom = 1125.0
 
 [node name="Bubuk" parent="." unique_id=247195012 instance=ExtResource("9")]
 layout_mode = 0
-offset_left = 105.0
-offset_top = 628.0
-offset_right = 343.0
-offset_bottom = 805.0
+offset_left = 40.0
+offset_top = 593.0
+offset_right = 368.0
+offset_bottom = 884.0
 display_name = "Bubuk"
 texture = ExtResource("10_vq8yw")
-box_color = Color(0.86, 0.82, 0.62, 1)
 
 [node name="PakGuyon" parent="." unique_id=1372945568 instance=ExtResource("2")]
 visible = false
@@ -171,7 +175,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SuhuToggle" type="Control" parent="." unique_id=1923456789]
-layout_mode = 0
+anchors_preset = 0
 offset_left = 360.0
 offset_top = 880.0
 offset_right = 480.0
@@ -194,6 +198,14 @@ offset_bottom = 138.0
 theme_override_font_sizes/font_size = 16
 text = "Netral"
 horizontal_alignment = 1
+
+[node name="HintBubble" parent="." unique_id=881234567 instance=ExtResource("13")]
+visible = false
+layout_mode = 0
+offset_left = 1043.0
+offset_top = 701.0
+offset_right = 1503.0
+offset_bottom = 861.0
 
 [node name="StirCanvas" type="CanvasLayer" parent="." unique_id=103183012]
 layer = 5
